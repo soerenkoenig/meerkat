@@ -30,8 +30,8 @@ namespace owl
       static constexpr std::uint8_t max() noexcept { return 255; }
       static constexpr std::uint8_t convert(std::uint8_t v) { return v; }
       static constexpr std::uint8_t convert(std::uint16_t v) { return static_cast<std::uint8_t>( v / 257 ); }
-      static constexpr std::uint8_t convert(float v){ return std::clamp(v, 0.0f, 1.0f) * 255; }
-      static constexpr std::uint8_t convert(double v){ return std::clamp(v, 0.0, 1.0) * 255; }
+      static constexpr std::uint8_t convert(float v){ return static_cast<std::uint8_t>(std::clamp(v, 0.0f, 1.0f) * 255); }
+      static constexpr std::uint8_t convert(double v){ return static_cast<std::uint8_t>(std::clamp(v, 0.0, 1.0) * 255); }
     };
 
     template<> class channel_traits<std::uint16_t>
@@ -43,8 +43,8 @@ namespace owl
       static constexpr std::uint16_t max() noexcept { return 65535; }
       static constexpr std::uint16_t convert(std::uint8_t v) { return static_cast<std::uint16_t>( ( v << 8 ) | v ); }
       static constexpr std::uint16_t convert(std::uint16_t v) { return v; }
-      static constexpr std::uint16_t convert(float v){ return std::clamp(v, 0.0f, 1.0f) * 65535; }
-      static constexpr std::uint16_t convert(double v){ return std::clamp(v, 0.0, 1.0) * 65535; }
+      static constexpr std::uint16_t convert(float v){ return static_cast<std::uint16_t>(std::clamp(v, 0.0f, 1.0f) * 65535); }
+      static constexpr std::uint16_t convert(double v){ return static_cast<std::uint16_t>(std::clamp(v, 0.0, 1.0) * 65535); }
     };
 
     template<> class channel_traits<float>

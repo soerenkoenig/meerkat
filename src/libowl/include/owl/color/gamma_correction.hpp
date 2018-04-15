@@ -39,7 +39,7 @@ namespace owl
       Derived<T, HasAlpha> res(static_cast<const math::vector<T,N>&>(col));
     
       for(auto& ch : res)
-        ch = linear_2_gamma_corrected(ch, cm);
+        ch = static_cast<T>(linear_2_gamma_corrected(ch, cm));
       return res;
     }
   }

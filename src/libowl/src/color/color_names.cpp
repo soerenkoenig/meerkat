@@ -5,7 +5,7 @@ namespace owl
   namespace color
   {
   
-     std::vector<std::string> color_names::names  = {
+     std::vector<std::string> color_names::names  = {{
        "aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black",
        "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse",
        "chocolate", "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue",
@@ -29,9 +29,9 @@ namespace owl
        "slateblue", "slategray", "slategrey", "snow", "springgreen", "steelblue", "tan", "teal",
        "thistle", "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke", "yellow",
        "yellowgreen"
-      };
+      }};
 
-      std::vector<rgb8u> color_names::values = {
+      std::vector<rgb8u> color_names::values = {{
         {240,248,255}, {250,235,215}, {0,255,255},   {127,255,212}, {240,255,255}, {245,245,220},
         {255,228,196}, {0,0,0},       {255,235,205}, {0,0,255},     {138,43,226},  {165,42,42},
         {222,184,135}, {95,158,160},  {127,255,0},   {210,105,30},  {255,127,80},  {100,149,237},
@@ -57,6 +57,6 @@ namespace owl
         {119,128,144}, {255,255,250}, {0,255,127},   {70,130,180},  {210,180,140}, {0,128,128},
         {216,191,216}, {255,99,71},   {64,224,208},  {238,130,238}, {245,222,179}, {255,255,255},
         {245,245,245}, {255,255,0},   {154, 205, 50}
-      };
+      }};
   }
 }

@@ -202,7 +202,7 @@ namespace owl
         friend struct disconnector;
       };
   
-      struct disconnector : private non_copyable
+      struct OWL_API disconnector : private non_copyable
       {
         disconnector(signal_base *signal)
           : owning_signal_{signal}

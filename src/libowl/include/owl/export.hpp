@@ -10,7 +10,7 @@
 #pragma once
 
 #ifdef _WIN32
-
+#pragma warning (disable:4251)
 #ifdef owl_EXPORTS
 #define OWL_API __declspec(dllexport)
 #else

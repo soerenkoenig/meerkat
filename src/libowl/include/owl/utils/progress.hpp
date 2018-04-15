@@ -13,6 +13,7 @@
 #include <cassert>
 #include <vector>
 #include <chrono>
+#include <atomic>
 #include "owl/utils/range_algorithm.hpp"
 
 namespace owl
@@ -170,7 +171,7 @@ namespace owl
       struct current_info
       {
         progress* current;
-        std::size_t num_steps_pending;
+        std::uint64_t num_steps_pending;
       };
     
       static thread_local std::stack<current_info> current_progress_;

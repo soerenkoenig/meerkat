@@ -166,7 +166,7 @@ namespace owl
     template <typename Scalar, typename Scalar2>
     mesh<Scalar> create_geodesic_sphere(Scalar2 radius = 1, std::size_t levels = 2)
     {
-      mesh<Scalar> m = create_icosaeder<Scalar>(radius);
+      mesh<Scalar> m = create_icosaeder<Scalar>(static_cast<Scalar>(radius));
     
       for(std::size_t i = 0; i < levels; ++i)
       {
@@ -256,7 +256,7 @@ namespace owl
    
       for(std::size_t i = 0; i < stacks + 1; i++)
       {
-        Scalar h = (stacks - i) * height / stacks;
+        Scalar h = static_cast<Scalar>((stacks - i) * height / stacks);
 
         for(std::size_t j = 0; j < slices; j++)
         {
@@ -340,7 +340,7 @@ namespace owl
     
       for(std::size_t i = 0; i < slices; ++i)
       {
-        Scalar angle= -i * constants::two_pi<Scalar>/slices;
+        Scalar angle= -1*i * constants::two_pi<Scalar>/slices;
         positions.emplace_back(cos(angle) * radius, 0, sin(angle) * radius);
       }
       auto vhandles = m.add_vertices(positions);

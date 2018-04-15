@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <functional>
 
 #include "owl/export.hpp"
 

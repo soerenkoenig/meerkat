@@ -1,6 +1,7 @@
 #include "owl/io/off.hpp"
 #include <iostream>
 #include <utility>
+#include <string>
 
 namespace owl
 {

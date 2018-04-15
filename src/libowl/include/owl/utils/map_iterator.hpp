@@ -9,6 +9,7 @@
 
 #pragma once
 #include <iterator>
+#include <utility>
 #include <type_traits>
 
 #include "owl/utils/iterator_range.hpp"

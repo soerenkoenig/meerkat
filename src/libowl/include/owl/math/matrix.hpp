@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <random>
 #include <type_traits>
+#include <functional>
 
 #include "owl/utils/linear_index.hpp"
 #include "owl/utils/iterator_range.hpp"
@@ -330,7 +331,7 @@ namespace owl
     
     matrix(matrix& other) = default;
     
-    matrix(const matrix& other) = default;
+    //matrix(const matrix& other) = default;
     
     matrix(matrix&& other) = default;
     
@@ -460,42 +461,6 @@ namespace owl
     const_reference operator()(size_type r, size_type c) const
     {
       return data_[linear_index(r, c)];
-    }
-    
-    template< typename S, std::size_t N, std::size_t M>
-    friend bool operator==(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-    {
-      return lhs.data_ == rhs.data_;
-    }
-    
-    template< typename S, std::size_t N, std::size_t M>
-    friend bool operator!=(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-    {
-      return lhs.data_ != rhs.data_;
-    }
-    
-    template< typename S, std::size_t N, std::size_t M>
-    friend bool operator<(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-    {
-      return lhs.data_ < rhs.data_;
-    }
-    
-    template<typename S, std::size_t N, std::size_t M>
-    friend bool operator<=(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-    {
-      return lhs.data_ <= rhs.data_;
-    }
-    
-    template<typename S, std::size_t N, std::size_t M>
-    friend bool operator>(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-    {
-      return lhs.data_ > rhs.data_;
-    }
-    
-    template <typename S, std::size_t N, std::size_t M, typename T>
-    friend bool operator>=(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-    {
-      return lhs.data_ >= rhs.data_;
     }
     
     constexpr static bool empty()
@@ -666,7 +631,7 @@ namespace owl
       value_type l = length();
       if(l != 0)
       {
-        l = 1.0 / l;
+        l = static_cast<value_type>(1.0 / l);
         *this *= l;
       }
     }
@@ -694,10 +659,53 @@ namespace owl
     {
       *this = transposed();
     }
-    
+
+      template< typename S, std::size_t N, std::size_t M>
+      friend bool operator==(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs);
+
+
+
     private:
       container_type data_;
     };
+
+    template< typename S, std::size_t N, std::size_t M>
+    bool operator==(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
+    {
+      return lhs.data_ == rhs.data_;
+    }
+
+
+
+    template< typename S, std::size_t N, std::size_t M>
+      bool operator!=(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
+      {
+        return lhs.data_ != rhs.data_;
+      }
+
+      template< typename S, std::size_t N, std::size_t M>
+      bool operator<(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
+      {
+        return lhs.data_ < rhs.data_;
+      }
+
+      template<typename S, std::size_t N, std::size_t M>
+      bool operator<=(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
+      {
+          return lhs.data_ <= rhs.data_;
+      }
+
+      template<typename S, std::size_t N, std::size_t M>
+      bool operator>(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
+      {
+          return lhs.data_ > rhs.data_;
+      }
+
+      template <typename S, std::size_t N, std::size_t M, typename T>
+      bool operator>=(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
+      {
+          return lhs.data_ >= rhs.data_;
+      }
     
     
     namespace detail

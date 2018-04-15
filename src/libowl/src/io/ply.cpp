@@ -2,6 +2,8 @@
 #include "owl/io/ply.hpp"
 #include <iostream>
 #include <utility>
+#include <algorithm>
+#include <string>
 
 namespace owl
 {

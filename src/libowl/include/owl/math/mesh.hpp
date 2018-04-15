@@ -10,6 +10,9 @@
 #pragma once
 
 #include <stack>
+#include <bitset>
+#include <utility>
+
 #include "owl/export.hpp"
 #include "owl/utils/handle.hpp"
 #include "owl/utils/dynamic_properties.hpp"
@@ -724,10 +727,10 @@ namespace owl
           he_next = next(next(he_next));
           while(he_next != he_prev)
           {
-            insert(edge(he_prev,he_next));
+            insert(edge(he_prev, he_next));
             he_next = next(next(he_next));
           }
-          insert_edge(he_prev,he_next);
+          insert_edge(he_prev, he_next);
         }
       }
     
@@ -1066,7 +1069,8 @@ namespace owl
         return verts;
       }
     
-      template <typename... VertexHandles, typename = std::enable_if_t<(... && std::is_same<std::decay_t<VertexHandles>,vertex_handle>::value)>>
+      template <typename... VertexHandles/*
+ * , typename = std::enable_if_t<(... && std::is_same<std::decay_t<VertexHandles>,vertex_handle>::value)>*/>
       face_handle add_face(VertexHandles&&... vertices)
       {
          return add_face(std::array<vertex_handle, sizeof...(vertices)> {{ std::forward<VertexHandles>(vertices)... }});
