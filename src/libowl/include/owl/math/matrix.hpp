@@ -330,18 +330,27 @@ namespace owl
     }
     
     matrix(matrix&) = default;
-    
-    matrix(const matrix&) = default;
-    
-    matrix(matrix&&) = default;
-    
-    template <typename S2, typename = std::enable_if_t<!std::is_same_v<S2, Scalar> > >
-    matrix(const matrix<S2, Rows, Cols>& other)
+
+
+#ifndef WIN32
+    matrix(const matrix& other) = default;
+
+    template <typename S2>
+    matrix(matrix<S2, Rows, Cols> other)
     {
       for(size_type i = 0; i < Rows;++i)
         for(size_type j = 0; j < Cols; ++j)
           operator()(i, j) = other(i, j);
     }
+#else
+    template <typename S2 >
+    matrix(matrix<S2, Rows, Cols> other)
+    {
+      for(size_type i = 0; i < Rows;++i)
+        for(size_type j = 0; j < Cols; ++j)
+          operator()(i, j) = other(i, j);
+    }
+#endif
     
     matrix& operator=(const matrix& other) = default;
     
