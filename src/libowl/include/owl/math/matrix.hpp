@@ -322,7 +322,8 @@ namespace owl
     {
     }
     
-    template<typename M = matrix, typename S, typename... Args, typename = std::enable_if_t<M::is_vector()>>
+    template<typename M = matrix, typename S, typename... Args, typename = std::enable_if_t<M::is_vector()>,
+      typename = enable_if_scalar_t<S>>
     explicit matrix(S&& a, Args&&... args)
       : data_{{static_cast<value_type>(std::forward<S>(a)), static_cast<value_type>(std::forward<Args>(args))...}}
     {
