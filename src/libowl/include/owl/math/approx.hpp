@@ -94,8 +94,8 @@ namespace owl
     
       const std::decay_t<T>& value() const { return value_; }
 
-      template <typename T,typename T2, typename>
-      friend bool operator==(const T2& lhs, const approximately<T>& rhs);
+      template <typename T1,typename T2, typename>
+      friend bool operator==(const T2& lhs, const approximately<T1>& rhs);
     
      private:
         double epsilon_;

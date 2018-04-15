@@ -329,13 +329,13 @@ namespace owl
       static_assert(sizeof...(Args) == 0 || sizeof...(Args) + 1 == size(), "incorrect number of arguments");
     }
     
-    matrix(matrix& other) = default;
+    matrix(matrix&) = default;
     
-    //matrix(const matrix& other) = default;
+    matrix(const matrix&) = default;
     
-    matrix(matrix&& other) = default;
+    matrix(matrix&&) = default;
     
-    template <typename S2>
+    template <typename S2, typename = std::enable_if_t<!std::is_same_v<S2, Scalar> > >
     matrix(const matrix<S2, Rows, Cols>& other)
     {
       for(size_type i = 0; i < Rows;++i)
@@ -463,9 +463,9 @@ namespace owl
       return data_[linear_index(r, c)];
     }
     
-    constexpr static bool empty()
+    constexpr bool empty()
     {
-      return container_type::empty();
+      return data_.empty();
     }
     
     pointer data()

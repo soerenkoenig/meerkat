@@ -39,7 +39,7 @@ namespace owl
       static constexpr std::size_t num_channels() { return  HasAlpha ? N + 1 : N; }
     
       color() = default;
-      color(const color&) = default;
+      explicit color(const color&) = default;
       color(color&&) = default;
       color& operator=(const color&) = default;
       color& operator=(color&&) = default;
@@ -288,7 +288,7 @@ namespace owl
     };
   
     template<typename Channel, bool HasAlpha = false>
-    class rgb : public color<Channel, 3, HasAlpha, rgb>
+    class rgb : public color<Channel, 3, HasAlpha, owl::color::rgb>
     {
     public:
   
@@ -321,7 +321,7 @@ namespace owl
     };
   
     template<typename Channel, bool HasAlpha = false>
-    class bgr : public color<Channel, 3, HasAlpha, bgr>
+    class bgr : public color<Channel, 3, HasAlpha, owl::color::bgr>
     {
     public:
       using base_type = color<Channel, 3, HasAlpha, owl::color::bgr>;
