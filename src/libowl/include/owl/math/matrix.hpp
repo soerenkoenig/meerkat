@@ -330,22 +330,23 @@ namespace owl
       static_assert(sizeof...(Args) == 0 || sizeof...(Args) + 1 == size(), "incorrect number of arguments");
     }
     
-    matrix(matrix&) = default;
 
 
-#ifndef WIN32
-    matrix(const matrix& other) = default;
+
+#ifndef WIN32_
 
     template <typename S2>
-    matrix(matrix<S2, Rows, Cols> other)
+    matrix(const matrix<S2, Rows, Cols> other)
     {
       for(size_type i = 0; i < Rows;++i)
         for(size_type j = 0; j < Cols; ++j)
           operator()(i, j) = other(i, j);
     }
 #else
+matrix(const matrix&) = default;
+
     template <typename S2 >
-    matrix(matrix<S2, Rows, Cols> other)
+    matrix(const matrix<S2, Rows, Cols>& other)
     {
       for(size_type i = 0; i < Rows;++i)
         for(size_type j = 0; j < Cols; ++j)

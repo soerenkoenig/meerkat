@@ -44,7 +44,7 @@ namespace owl
       color& operator=(const color&) = default;
       color& operator=(color&&) = default;
     
-      explicit color(const math::vector<T,N>& other)
+      color(const math::vector<T,N>& other)
         : channels_{other}
       {
       }
