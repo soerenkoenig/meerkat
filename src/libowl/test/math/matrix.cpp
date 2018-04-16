@@ -104,7 +104,7 @@ namespace test
     CHECK(approx(I*V) == vector4f(1,2,3,4));
 
     auto m = random_matrix<float,4,4>();
-    CHECK(approx(invert(m)*m).margin(0.000001) == matrix44f::identity());
+    CHECK(approx(invert(m)*m).margin(0.0001) == matrix44f::identity());
 
     matrix33f R;
     R << 0.973076000000000  , 0.230486000000000,  -0.000000000061821,

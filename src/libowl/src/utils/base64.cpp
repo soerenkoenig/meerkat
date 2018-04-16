@@ -22,10 +22,15 @@ namespace owl
   
     std::size_t base64_decoded_size(const std::string& encoded_string)
     {
+
       std::size_t padded_size = 0;
       auto it = encoded_string.rbegin();
-      while(it != encoded_string.rend() && (*it--  == '='))
+      while(it != encoded_string.rend() && (*it  == '='))
+      {
+        it++;
         padded_size++;
+      }
+
     
       return (encoded_string.size() * 3 / 4) - padded_size;
     }
@@ -91,7 +96,7 @@ namespace owl
       {
         in_len--;
         char_array_4[i++] = encoded_string[in_]; in_++;
-        if (i ==4)
+        if (i == 4)
          {
           for (i = 0; i <4; i++)
             char_array_4[i] = static_cast<unsigned char>(base64_chars.find(char_array_4[i]));
