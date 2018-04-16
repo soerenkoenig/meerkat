@@ -39,7 +39,7 @@ namespace owl
       static constexpr std::size_t num_channels() { return  HasAlpha ? N + 1 : N; }
     
       color() = default;
-      explicit color(const color&) = default;
+      color(const color&) = default;
       color(color&&) = default;
       color& operator=(const color&) = default;
       color& operator=(color&&) = default;

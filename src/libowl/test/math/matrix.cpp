@@ -50,11 +50,15 @@ namespace test
   TEST_CASE( "matrix multiplications", "[math]" )
   {
     owl::math::matrix33f m;
+    CHECK(m.is_square());
+    CHECK(m.is_square(3));
+    CHECK_FALSE(m.is_square(4));
     m << 1,2,3,
       4,5,6,
       7,8,9;
 
     owl::math::vector3f v;
+    CHECK_FALSE(v.is_square());
     v << 1,4,7;
 
     auto vt = transpose(v);
@@ -99,8 +103,8 @@ namespace test
     auto V = vector4f{1,2,3,4};
     CHECK(approx(I*V) == vector4f(1,2,3,4));
 
-    auto m = random_matrix<double,4,4>();
-    CHECK(approx(invert(m)*m).margin(0.00000001) == matrix44f::identity());
+    auto m = random_matrix<float,4,4>();
+    CHECK(approx(invert(m)*m).margin(0.000001) == matrix44f::identity());
 
     matrix33f R;
     R << 0.973076000000000  , 0.230486000000000,  -0.000000000061821,

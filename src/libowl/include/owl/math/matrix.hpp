@@ -310,6 +310,7 @@ namespace owl
     }
     
     constexpr matrix() = default;
+    matrix(const matrix&) = default;
     
     template<typename M = matrix, typename = std::enable_if_t<M::is_vector()>>
     matrix(std::initializer_list<Scalar> list)
@@ -329,30 +330,6 @@ namespace owl
     {
       static_assert(sizeof...(Args) == 0 || sizeof...(Args) + 1 == size(), "incorrect number of arguments");
     }
-    
-
-
-
-#ifndef WIN32_
-
-    template <typename S2>
-    matrix(const matrix<S2, Rows, Cols> other)
-    {
-      for(size_type i = 0; i < Rows;++i)
-        for(size_type j = 0; j < Cols; ++j)
-          operator()(i, j) = other(i, j);
-    }
-#else
-matrix(const matrix&) = default;
-
-    template <typename S2 >
-    matrix(const matrix<S2, Rows, Cols>& other)
-    {
-      for(size_type i = 0; i < Rows;++i)
-        for(size_type j = 0; j < Cols; ++j)
-          operator()(i, j) = other(i, j);
-    }
-#endif
     
     matrix& operator=(const matrix& other) = default;
     
@@ -488,9 +465,8 @@ matrix(const matrix&) = default;
     {
       return data_.data();
     }
-    
-    template <typename S, typename = enable_if_scalar_t<S>>
-    matrix& operator*=(S&& s)
+
+    matrix& operator*=(const Scalar& s)
     {
       for(auto& elem : data_)
         elem *= s;
@@ -498,15 +474,14 @@ matrix(const matrix&) = default;
     }
     
     template <typename S,typename = enable_if_scalar_t<S>>
-    matrix operator*(S&& s) const
+    auto operator*(S&& s) const
     {
-      auto ans = *this;
-      ans *= s;
+      result_matrix_t<S> ans;
+      std::transform(data_.begin(), data_.end(), ans.begin(), [&s](const auto& e){ return s*e; });
       return ans;
     }
-    
-    template <typename S2>
-    matrix& operator+=(const matrix<S2, Rows, Cols>& other)
+
+    matrix& operator+=(const matrix& other)
     {
       std::transform(begin(), end(), other.begin(), begin(), std::plus<value_type>());
       return *this;
@@ -519,11 +494,10 @@ matrix(const matrix&) = default;
       std::transform(begin(), end(), other.begin(), res.begin(), std::plus<value_type>());
       return res;
     }
-    
-    template <typename S2>
-    matrix& operator-=(const matrix<S2, Rows, Cols>& other)
+
+    matrix& operator-=(const matrix& other)
     {
-      std::transform (begin(), end(), other.begin(), begin(), std::minus<value_type>());
+      std::transform(begin(), end(), other.begin(), begin(), std::minus<value_type>());
       return *this;
     }
     
@@ -531,7 +505,7 @@ matrix(const matrix&) = default;
     auto operator-(const matrix<S, Rows, Cols>& other) const
     {
       result_matrix_t<S> res;
-      std::transform(begin(), end(), other.begin(), res.begin(), std::minus<value_type>());
+      std::transform(begin(), end(), other.begin(), res.begin(), std::minus());
       return res;
     }
     
@@ -607,17 +581,15 @@ matrix(const matrix&) = default;
         return prod;
     }
     
-    
-    template <typename S, typename = enable_if_scalar_t<S>>
-    matrix& operator/=(S&& s)
+
+    matrix& operator/=(const Scalar& s)
     {
       for(auto& elem: data_)
         elem /= s;
       return *this;
     }
-    
-    template <typename S, typename = enable_if_scalar_t<S>>
-    matrix operator/(S&& s)
+
+    matrix operator/(const Scalar& s)
     {
       auto ans = *this;
       ans /= s;
@@ -812,6 +784,22 @@ matrix(const matrix&) = default;
     using matrix43f = matrix<float, 4, 3>;
   
     using matrix44f = square_matrix<float, 4>;
+
+    using vector2d = vector2<double>;
+    using vector3d = vector3<double>;
+    using vector4d = vector4<double>;
+
+    using matrix22d = square_matrix<double, 2>;
+
+    using matrix23d = matrix<double, 2, 3>;
+    using matrix32d = matrix<double, 3, 2>;
+
+    using matrix33d = square_matrix<double, 3>;
+
+    using matrix34d = matrix<double, 3, 4>;
+    using matrix43d = matrix<double, 4, 3>;
+
+    using matrix44d = square_matrix<double, 4>;
   
   
     template< typename  S, std::size_t N, std::size_t M,
@@ -865,10 +853,10 @@ matrix(const matrix&) = default;
       return m;
     }
   
-    template<typename S, std::size_t N, std::size_t M, typename S2>
-    auto comp_mult(const matrix<S, N, M>& lhs, const matrix<S2, N, M>& rhs)
+    template<typename S1, std::size_t N, std::size_t M, typename S2>
+    auto comp_mult(const matrix<S1, N, M>& lhs, const matrix<S2, N, M>& rhs)
     {
-      matrix<decltype(std::declval<S>() * std::declval<S2>()), N, M> m;
+      matrix<decltype(std::declval<S1>() * std::declval<S2>()), N, M> m;
       std::transform(lhs.begin(), lhs.end(), rhs.begin(), m.begin(), std::multiplies<>());
       return m;
     }
