@@ -93,20 +93,20 @@ namespace owl
   
         if (m(0,0) + m(1,1) + m(2,2) > m(i,i))
         {
-          w() = sqrt(m(0,0) + m(1,1) + m(2,2) + 1.0) / 2.0;
-          x() = (m(2,1) - m(1,2)) / (4.0 * w());
-          y() = (m(0,2) - m(2,0)) / (4.0 * w());
-          z() = (m(1,0) - m(0,1)) / (4.0 * w());
+          w() = sqrt(m(0,0) + m(1,1) + m(2,2) + scalar(1)) / scalar(2);
+          x() = (m(2,1) - m(1,2)) / (scalar(4) * w());
+          y() = (m(0,2) - m(2,0)) / (scalar(4) * w());
+          z() = (m(1,0) - m(0,1)) / (scalar(4) * w());
         }
         else
         {
           std::size_t j = (i + 1) % 3;
           std::size_t k = (i + 2) % 3;
 
-          data_[i] = sqrt(m(i,i) - m(j,j) - m(k,k) + 1.0) / 2.0;
-          data_[j] = (m(i,j) + m(j,i)) / (4.0 * data_[i]);
-          data_[k] = (m(i,k) + m(k,i)) / (4.0 * data_[i]);
-          w() = (m(k,j) - m(j,k)) / (4.0 * data_[i]);
+          data_[i] = sqrt(m(i,i) - m(j,j) - m(k,k) +  scalar(1)) / scalar(2);
+          data_[j] = (m(i,j) + m(j,i)) / (scalar(4) * data_[i]);
+          data_[k] = (m(i,k) + m(k,i)) / (scalar(4) * data_[i]);
+          w() = (m(k,j) - m(j,k)) / (scalar(4) * data_[i]);
         }
         return *this;
       }

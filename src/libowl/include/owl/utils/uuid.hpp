@@ -56,7 +56,7 @@ namespace owl
       
       bool operator>=(uuid const& other) noexcept;
       
-      enum variant_type
+      enum OWL_API variant_type
       {
         variant_ncs, // NCS backward compatibility
         variant_rfc_4122, // defined in RFC 4122 document
@@ -66,7 +66,7 @@ namespace owl
       
       variant_type variant() const noexcept;
       
-      enum version_type
+      enum OWL_API version_type
       {
         version_unknown = -1,
         version_time_based = 1,
@@ -189,12 +189,12 @@ namespace owl
       }
       return is;
     }
-    
-    std::string to_string(const uuid& u);
-    
-    std::wstring to_wstring(const uuid& u);
-   
-    uuid random_uuid();
+
+    OWL_API std::string to_string(const uuid& u);
+
+    OWL_API std::wstring to_wstring(const uuid& u);
+
+    OWL_API uuid random_uuid();
   
     namespace detail
     {

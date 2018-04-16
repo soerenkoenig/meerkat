@@ -13,6 +13,7 @@
 #include <iterator>
 #include <tuple>
 #include <iostream>
+#include <functional>
 
 #include "owl/export.hpp"
 
@@ -227,8 +228,8 @@ namespace owl
     
     private:
       Handle current_;
-      Next next;
-      Deref deref;
+      std::function<Handle(const Handle&)> next;
+      std::function<value_type(const Handle&)> deref;
     };
   
     template <typename Handle, typename Next, typename Deref>
@@ -304,8 +305,8 @@ namespace owl
     private:
       Handle current_;
       Handle initial_;
-      Next next;
-      Deref deref;
+      std::function<Handle(const Handle&)> next;
+      std::function<value_type(const Handle&)> deref;
       std::size_t lab_count_;
     };
   

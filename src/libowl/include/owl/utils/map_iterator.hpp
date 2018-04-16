@@ -11,6 +11,7 @@
 #include <iterator>
 #include <utility>
 #include <type_traits>
+#include <functional>
 
 #include "owl/utils/iterator_range.hpp"
 
@@ -36,9 +37,12 @@ namespace owl
     
       using const_reference = const value_type;
     
-      using function_type = Predicate;
+      using function_type = std::function<value_type(decltype(*std::declval<Iterator>()))>;
     
       map_iterator() = default;
+
+      map_iterator(const map_iterator&) = default;
+      map_iterator& operator=(const map_iterator&) = default;
     
      explicit map_iterator(const base_iterator_type &base)
         : base_(base)
@@ -81,15 +85,15 @@ namespace owl
         --base_;
         return *this;
       }
-    
-      map_iterator operator++(int)
+
+      const map_iterator operator++(int)
       {
         map_iterator tmp = *this;
         ++base_;
         return tmp;
       }
-    
-      map_iterator operator--(int)
+
+      const map_iterator operator--(int)
       {
         map_iterator tmp = *this;
         --base_;

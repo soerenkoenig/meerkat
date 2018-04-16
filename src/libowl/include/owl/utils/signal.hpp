@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 #include "owl/export.hpp"
 #include "owl/utils/non_copyable.hpp"

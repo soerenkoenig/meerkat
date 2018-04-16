@@ -92,5 +92,21 @@ namespace owl
     struct is_iterable<T, std::void_t<decltype(std::declval<T>().begin()), decltype(std::declval<T>().end())>>
       : std::true_type
     {};
+
+
+
+    template <bool... b> struct static_all_of;
+
+//implementation: recurse, if the first argument is true
+    template <bool... tail>
+    struct static_all_of<true, tail...> : static_all_of<tail...> {};
+
+//end recursion if first argument is false -
+    template <bool... tail>
+    struct static_all_of<false, tail...> : std::false_type {};
+
+// - or if no more arguments
+    template <> struct static_all_of<> : std::true_type {};
+
   }
 }

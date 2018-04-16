@@ -36,6 +36,9 @@ namespace owl
         : current_{integer}
       {
       }
+
+      count_iterator(const count_iterator&) = default;
+      count_iterator& operator=(const count_iterator&) = default;
       
       auto operator*() const
       {

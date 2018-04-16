@@ -209,7 +209,9 @@ namespace owl
     {
       using value_type = std::tuple<Args...>;
     
-      constexpr static bool is_serializable = (... && binary_serialization<std::decay_t<Args>>::is_serializable);
+      //constexpr static bool is_serializable = (... && binary_serialization<std::decay_t<Args>>::is_serializable);
+
+      constexpr static bool is_serializable = owl::utils::static_all_of<binary_serialization<std::decay_t<Args>>::is_serializable...>::value;
     
       static bool read(std::istream& in, value_type& value)
       {
