@@ -90,14 +90,14 @@ namespace test
     auto tr = translate<float>(vector3f(0,0,0),vector3f(1,2,3));
     CHECK(approx(tr * vector4f(0,0,0,1)) == vector4f(1,2,3,1));
     CHECK(approx(rotate_x<float,3>(degrees<float>(0))) == matrix33f::identity());
-    CHECK(approx(det(rotate_y<float,3>(degrees<float>(4.9)))) == 1);
-    CHECK(approx(det(rotate_z<float,3>(degrees<float>(4.9)))) == 1);
+    CHECK(approx(det(rotate_y<float,3>(degrees<float>(4.9f)))) == 1);
+    CHECK(approx(det(rotate_z<float,3>(degrees<float>(4.9f)))) == 1);
 
     auto trt = rotate(vector3f(1,0,0),vector3f(1,1,0),degrees<float>(90));
 
     CHECK(approx(trt*vector4f(0,0,0,1)) == vector4f(1,0,1,1));
 
-    CHECK(approx(rotate_x<float,3>(degrees<float>(3.6)) * rotate_x<float,3>(degrees<float>(-3.6))) == matrix33f::identity());
+    CHECK(approx(rotate_x<float,3>(degrees<float>(3.6f)) * rotate_x<float,3>(degrees<float>(-3.6f))) == matrix33f::identity());
 
     auto I = matrix44f::identity();
     auto V = vector4f{1,2,3,4};
@@ -116,7 +116,7 @@ namespace test
     auto mat = matrix33f(eul);
     CHECK(approx(mat).margin(0.000001) == R);
 
-    euler_angles<float> eul2{radians<float>(-1.53419), radians<float>(-1.68913e-09), radians<float>(-0.232577)};
+    euler_angles<float> eul2{radians<float>(-1.53419f), radians<float>(-1.68913e-09f), radians<float>(-0.232577f)};
     auto R2 = rotate_x<float,3>(eul2.pitch) * rotate_y<float,3>(radians<float>(eul2.yaw)) * rotate_z<float,3>(radians<float>(eul2.roll));
     auto mat2 = matrix33f(eul2);
     CHECK(approx(mat2).margin(0.000001) == R2);

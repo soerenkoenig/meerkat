@@ -170,11 +170,11 @@ namespace owl
     
       for(std::size_t i = 0; i < levels; ++i)
       {
-        auto n_old  = m.vertices().size();
+        auto n_old = m.vertices().size();
         m.subdivide_triangle_split();
         auto verts = m.vertices();
-      
-        for(auto& pos: m.positions(make_iterator_range(verts).advance_begin(n_old)))
+
+        for (auto &pos: m.positions(make_iterator_range(verts).advance_begin(n_old)))
           pos = radius * normalize(pos);
       }
       m.update_normals();

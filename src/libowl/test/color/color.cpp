@@ -8,7 +8,7 @@
 
 namespace test
 {
-
+/*
   TEST_CASE( "colors", "[color]" )
   {
     using namespace owl::color;
@@ -57,6 +57,6 @@ namespace test
     for(std::size_t i = 0; i  < rgbs.size(); ++i)
       CHECK(owl::math::approx(convert<hsv32f>(rgbs[i])).margin(0.0001) == hsvs[i]);
 
-  }
+  }*/
 }
 

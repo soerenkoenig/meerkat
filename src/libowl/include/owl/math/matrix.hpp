@@ -15,8 +15,10 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include <utility>
 #include <type_traits>
 #include <functional>
+
 
 #include "owl/utils/linear_index.hpp"
 #include "owl/utils/iterator_range.hpp"
@@ -504,8 +506,9 @@ namespace owl
     template<typename S>
     auto operator-(const matrix<S, Rows, Cols>& other) const
     {
+      using result_scalar = decltype(std::declval<Scalar>() - std::declval<S>());
       result_matrix_t<S> res;
-      std::transform(begin(), end(), other.begin(), res.begin(), std::minus());
+      std::transform(begin(), end(), other.begin(), res.begin(), std::minus<result_scalar>());
       return res;
     }
     
@@ -727,7 +730,7 @@ namespace owl
             ++row_;
             assert(row_ < mat_.nrows());
           }
-          mat_(row_, col_++) = std::forward<S2>(s);
+          mat_(row_, col_++) = static_cast<S>(std::forward<S2>(s));
           return *this;
         }
         
@@ -742,12 +745,12 @@ namespace owl
     {
       return detail::comma_initializer<S, N, M>(lhs, std::forward<S2>(value));
     }
-  
+
     template<typename S1, typename  S2, std::size_t N, std::size_t M,
       typename = typename matrix<S2, N, M>:: template enable_if_scalar_t<S1, S2>>
-    matrix<S2, N, M> operator*(S1&& lhs, matrix<S2, N, M> rhs)
+    auto operator*(S1 lhs, const matrix<S2, N, M>& rhs)
     {
-      return rhs *= lhs;
+      return rhs*lhs;
     }
   
   

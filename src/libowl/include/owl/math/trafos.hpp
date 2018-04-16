@@ -191,7 +191,7 @@ namespace owl
       dirn.normalize();
       square_matrix<T,3> omega = cross_mat(dirn);
   
-      R += sin(theta)*omega + (1.0 - cos(theta)) * (omega * omega);
+      R += sin(theta)*omega + (T(1) - cos(theta)) * (omega * omega);
       if constexpr (N == 3)
         return R;
     

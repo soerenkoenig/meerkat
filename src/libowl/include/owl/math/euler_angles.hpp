@@ -17,13 +17,12 @@ namespace owl
 {
   namespace math
   {
-  
     template<typename Scalar>
     class euler_angles
     {
     public:
       using scalar = Scalar;
-      using angle = angle<Scalar>;
+      using angle = math::angle<Scalar>;
       using matrix33 = square_matrix<scalar, 3>;
       using matrix44 = square_matrix<scalar, 4>;
     
