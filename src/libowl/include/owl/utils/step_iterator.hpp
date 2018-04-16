@@ -108,7 +108,7 @@ namespace owl
     
       step_iterator& operator--()
       {
-        std::advance(base_, -step_size());
+        std::advance(base_, -1*step_size());
         return *this;
       }
   

@@ -75,7 +75,7 @@ namespace owl
     {
     public:
     static_assert(Rows * Cols > 0, "invalid matrix dimension");
-    static_assert(std::is_arithmetic_v<Scalar> && !std::is_same_v<Scalar, bool>, "invalid scalar type");
+    static_assert(std::is_arithmetic<Scalar>::value && !std::is_same<Scalar, bool>::value, "invalid scalar type");
     
     using container_type = std::array<Scalar, Rows * Cols>;
     using size_type = typename container_type::size_type;

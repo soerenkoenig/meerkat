@@ -14,13 +14,14 @@
 #include <vector>
 #include <chrono>
 #include <atomic>
+#include "owl/export.hpp"
 #include "owl/utils/range_algorithm.hpp"
 
 namespace owl
 {
   namespace utils
   {
-    class progress
+    class OWL_API progress
     {
     public:
     
@@ -100,15 +101,15 @@ namespace owl
       void make_current(std::uint64_t num_steps_pending)
       {
         if(current() != this)
-          current_progress_.push(current_info{this, num_steps_pending});
+          get_current_progress().push(current_info{this, num_steps_pending});
       }
   
       void resign_current()
       {
         assert(current() == this);
         if(children_.size() == 0)
-          num_steps_completed_ += current_progress_.top().num_steps_pending;
-        current_progress_.pop();
+          num_steps_completed_ += get_current_progress().top().num_steps_pending;
+        get_current_progress().pop();
         children_.clear();
       }
   
@@ -155,26 +156,32 @@ namespace owl
       
       static progress* current()
       {
-        if(progress::current_progress_.empty())
+        if(progress::get_current_progress().empty())
           return nullptr;
-        return progress::current_progress_.top().current;
+        return progress::get_current_progress().top().current;
       }
     
       static void add_child_to_current(progress* child)
       {
         assert(current() != nullptr);
         
-        current()->add_child(child, current_progress_.top().num_steps_pending);
+        current()->add_child(child, get_current_progress().top().num_steps_pending);
         //current()->balance(current_progress_.top().num_steps_pending);
       }
     
-      struct current_info
+      struct OWL_API current_info
       {
         progress* current;
         std::uint64_t num_steps_pending;
       };
+
+      static std::stack<current_info>& get_current_progress()
+      {
+        static thread_local std::stack<current_info> current_progress{};
+        return current_progress;
+      }
     
-      static thread_local std::stack<current_info> current_progress_;
+
   
       progress* parent_ = nullptr;
       std::atomic<std::uint64_t> num_steps_parent_ = 0;

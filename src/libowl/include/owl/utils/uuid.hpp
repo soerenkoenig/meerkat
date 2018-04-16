@@ -210,22 +210,22 @@ namespace owl
         return *begin++;
       }
 
-      unsigned char get_value(char c);
+      OWL_API unsigned char get_value(char c);
 
-      unsigned char get_value(wchar_t c);
+      OWL_API unsigned char get_value(wchar_t c);
 
-      bool is_dash(char c);
+      OWL_API bool is_dash(char c);
     
-      bool is_dash(wchar_t c);
+      OWL_API bool is_dash(wchar_t c);
     
       // return closing brace
-      bool is_open_brace(char c);
+      OWL_API bool is_open_brace(char c);
     
-      bool is_open_brace(wchar_t c);
+      OWL_API bool is_open_brace(wchar_t c);
     
-      void check_close_brace(char c, char open_brace);
+      OWL_API void check_close_brace(char c, char open_brace);
     
-      void check_close_brace(wchar_t c, wchar_t open_brace);
+      OWL_API void check_close_brace(wchar_t c, wchar_t open_brace);
 
       template <typename CharIterator>
       uuid parse_uuid(CharIterator begin, CharIterator end)
@@ -287,9 +287,9 @@ namespace owl
       }
     }
   
-    uuid parse_uuid(const char* const s);
+    OWL_API uuid parse_uuid(const char* const s);
 
-    uuid parse_uuid(const wchar_t* const s);
+    OWL_API uuid parse_uuid(const wchar_t* const s);
   
     template <typename ch, typename char_traits, typename alloc>
     uuid parse_uuid(const std::basic_string<ch, char_traits, alloc>& s)

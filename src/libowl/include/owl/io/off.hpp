@@ -15,11 +15,13 @@
 #include <fstream>
 #include <vector>
 
+#include "owl/export.hpp"
+
 namespace owl
 {
   namespace io
   {
-    class off_reader
+    class OWL_API off_reader
     {
     public:
       off_reader();
@@ -63,7 +65,7 @@ namespace owl
     
     };
   
-    bool create_off_cube(const std::string& filename)
+    inline bool create_off_cube(const std::string& filename)
     {
       std::ofstream off(filename);
       if(off.is_open())

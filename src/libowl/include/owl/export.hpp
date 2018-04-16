@@ -14,7 +14,11 @@
 #ifdef owl_EXPORTS
 #define OWL_API __declspec(dllexport)
 #else
+#ifdef OWL_DLL
 #define OWL_API __declspec(dllimport)
+#else
+#define OWL_API
+#endif
 #endif
 
 #else

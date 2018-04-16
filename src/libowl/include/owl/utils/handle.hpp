@@ -178,7 +178,7 @@ namespace owl
     class handle_iterator
     {
     public:
-      using iterator_category = typename std::forward_iterator_tag;
+      using iterator_category =  std::forward_iterator_tag;
       using value_type = decltype(std::declval<Deref>()(std::declval<Handle>()));
       using difference_type = decltype(std::declval<std::size_t>() - std::declval<std::size_t>());
       using pointer = void;
