@@ -36,19 +36,19 @@ namespace owl
       template <typename T, std::size_t N>
       constexpr T delta(std::size_t i)
       {
-          return i == N ? (T)1 : 0;
+        return i == N ? (T)1 : 0;
       }
   
       template <typename T>
       constexpr T zero(std::size_t)
       {
-          return 0;
+        return 0;
       }
   
       template <typename T>
       constexpr T one(std::size_t)
       {
-          return (T)1;
+        return (T)1;
       }
       
       template <typename T>
@@ -66,7 +66,7 @@ namespace owl
       template <typename T, std::size_t N>
       constexpr T eye(std::size_t i)
       {
-          return (i % (N + 1)) == 0 ? (T)1 : 0;
+        return (i % (N + 1)) == 0 ? (T)1 : 0;
       }
     }
   
@@ -190,7 +190,7 @@ namespace owl
       
     static constexpr matrix max()
     {
-       return matrix{owl::utils::make_array<size()>(detail::max<Scalar>)};
+      return matrix{owl::utils::make_array<size()>(detail::max<Scalar>)};
     }
     
     static constexpr matrix lowest()
@@ -258,7 +258,7 @@ namespace owl
     
     const_row_iterator row_cend(size_type r) const
     {
-     return const_row_iterator{iterator_at(r, ncols())};
+      return const_row_iterator{iterator_at(r, ncols())};
     }
     
     column_iterator column_begin(size_type c)
@@ -273,12 +273,12 @@ namespace owl
     
     const_column_iterator column_begin(size_type c) const
     {
-       return const_column_iterator{iterator_at(0, c)};
+      return const_column_iterator{iterator_at(0, c)};
     }
     
     const_column_iterator column_end(size_type c) const
     {
-       return const_column_iterator{iterator_at(nrows(), c)};
+      return const_column_iterator{iterator_at(nrows(), c)};
     }
     
     const_column_iterator column_cbegin(size_type c) const
@@ -288,7 +288,7 @@ namespace owl
     
     const_column_iterator column_cend(size_type c) const
     {
-       return const_column_iterator{iterator_at(nrows(), c)};
+      return const_column_iterator{iterator_at(nrows(), c)};
     }
     
     row_range row(size_type r)
@@ -570,8 +570,7 @@ namespace owl
     
       return prod;
     }
-    
-    
+
     template <typename S2, std::size_t C = Cols, size_t R = Rows, typename = std::enable_if_t<C != 1 && R != 1>, typename = void>
     auto operator*(const matrix<S2, Cols, 1>& other) const
     {
@@ -583,7 +582,6 @@ namespace owl
     
         return prod;
     }
-    
 
     matrix& operator/=(const Scalar& s)
     {
@@ -646,53 +644,41 @@ namespace owl
       *this = transposed();
     }
 
-      template< typename S, std::size_t N, std::size_t M>
-      friend bool operator==(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs);
+    bool operator==(const matrix& rhs) const
+    {
+      return data_ == rhs.data_;
+    }
 
+    bool operator!=(const matrix& rhs) const
+    {
+      return data_ != rhs.data_;
+    }
 
+    bool operator<(const matrix& rhs) const
+    {
+      return data_ < rhs.data_;
+    }
+
+    bool operator<=(const matrix& rhs) const
+    {
+      return data_ <= rhs.data_;
+    }
+
+    bool operator>( const matrix& rhs) const
+    {
+      return data_ > rhs.data_;
+    }
+
+    bool operator>=(const matrix& rhs) const
+    {
+      return data_ >= rhs.data_;
+    }
 
     private:
       container_type data_;
     };
 
-    template< typename S, std::size_t N, std::size_t M>
-    bool operator==(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-    {
-      return lhs.data_ == rhs.data_;
-    }
 
-
-
-    template< typename S, std::size_t N, std::size_t M>
-      bool operator!=(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-      {
-        return lhs.data_ != rhs.data_;
-      }
-
-      template< typename S, std::size_t N, std::size_t M>
-      bool operator<(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-      {
-        return lhs.data_ < rhs.data_;
-      }
-
-      template<typename S, std::size_t N, std::size_t M>
-      bool operator<=(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-      {
-          return lhs.data_ <= rhs.data_;
-      }
-
-      template<typename S, std::size_t N, std::size_t M>
-      bool operator>(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-      {
-          return lhs.data_ > rhs.data_;
-      }
-
-      template <typename S, std::size_t N, std::size_t M, typename T>
-      bool operator>=(const matrix<S, N, M>& lhs, const matrix<S, N, M>& rhs)
-      {
-          return lhs.data_ >= rhs.data_;
-      }
-    
     
     namespace detail
     {

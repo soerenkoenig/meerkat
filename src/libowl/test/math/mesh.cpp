@@ -10,7 +10,11 @@
 
 namespace test
 {
-
+#ifdef WIN32
+  std::string folder = "Y:/Downloads";
+#else
+  std::string folder = "/Users/skoenig/Downloads";
+#endif
 
   TEST_CASE( "add_face_s", "[math]" )
   {
@@ -34,7 +38,8 @@ namespace test
      owl::utils::stop_watch s;
      s.start();
      owl::math::mesh<float> m;
-     owl::math::read(m, "/Users/skoenig/Downloads/xyzrgb_dragon.ply");
+     owl::math::read(m,folder + "/xyzrgb_dragon.ply");
+    // owl::math::read(m, "/Users/skoenig/Downloads/xyzrgb_dragon.ply");
 
      CHECK(m.check() == 0);
     // owl::math::triangulate_monoton(m);
@@ -47,7 +52,7 @@ namespace test
   {
     using namespace owl::math;
     mesh<float> m;
-    owl::math::read(m, "/Users/skoenig/Downloads/178_raptor.off");
+    owl::math::read(m, folder + "/178_raptor.off");
     CHECK(m.check() == 0);
   }
 
@@ -55,7 +60,7 @@ namespace test
   {
     using namespace owl::math;
     mesh<float> m;
-    owl::math::read(m, "/Users/skoenig/Downloads/horse.off");
+    owl::math::read(m, folder + "/horse.off");
 
     CHECK(m.check() == 0);
   }
@@ -177,6 +182,6 @@ namespace test
     CHECK(is_open(disc));
     CHECK(disc.is_triangle_mesh());
     CHECK(disc.check() == 0);
-
   }
+
 }

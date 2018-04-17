@@ -41,9 +41,9 @@ namespace owl
       adjacent_iterator(Iterator first, Iterator last)
         : first_(first)
         , last_(last)
-        , current_(std::next(first))
-        , next_(std::next(std::next(first)))
-        , prev_(std::distance(first,last) < 3 ? last :first)
+        , current_(first != last ? std::next(first): last)
+        , next_(first != last ? std::next(std::next(first)) : last)
+        , prev_(std::distance(first,last) < 3 ? last : first)
       {
       }
 

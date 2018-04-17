@@ -217,7 +217,7 @@ namespace owl
   
     bool buffer::operator>(const buffer& other) const
     {
-      return other <= *this;
+      return   *this < other;
     }
   
     bool buffer::operator>=(const buffer& other) const
