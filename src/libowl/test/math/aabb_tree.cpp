@@ -6,7 +6,6 @@
 #include "owl/math/mesh.hpp"
 #include "catch/catch.hpp"
 
-#include <map>
 
 namespace test
 {
@@ -23,7 +22,6 @@ namespace test
 
     //aabb_tree<face_handle,>
 
-    std::map<int,int>::value_compare m;
 
 
   }

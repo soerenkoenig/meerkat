@@ -40,6 +40,7 @@ add_library(owl SHARED
         include/owl/math/trafos.hpp
         include/owl/math/triangle.hpp
         include/owl/math/utils.hpp
+        include/owl/math/point_utils.hpp
         include/owl/utils/adjacent_iterator.hpp
         include/owl/utils/base64.hpp
         include/owl/utils/binary_serialization.hpp
@@ -67,7 +68,8 @@ add_library(owl SHARED
         include/owl/export.hpp
         include/owl/optional.hpp
         include/owl/variant.hpp
-        include/owl/math/aabb_tree.hpp include/owl/math/primitive_traits.hpp include/owl/utils/point_utils.hpp)
+        include/owl/math/aabb_tree.hpp
+        include/owl/math/primitive_traits.hpp)
 
 target_include_directories(owl PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

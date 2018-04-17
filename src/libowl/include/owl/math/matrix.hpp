@@ -492,8 +492,9 @@ namespace owl
     template<typename S>
     auto operator+(const matrix<S, Rows, Cols>& other) const
     {
+      using result_scalar = decltype(std::declval<Scalar>() + std::declval<S>());
       result_matrix_t<S> res;
-      std::transform(begin(), end(), other.begin(), res.begin(), std::plus<value_type>());
+      std::transform(begin(), end(), other.begin(), res.begin(), std::plus<result_scalar>());
       return res;
     }
 
