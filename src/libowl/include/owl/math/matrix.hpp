@@ -644,6 +644,71 @@ namespace owl
       *this = transposed();
     }
 
+    auto max_element() const
+    {
+      return std::max_element(data_.begin(), data_.end());
+    }
+
+    auto max_element()
+    {
+      return std::max_element(data_.begin(), data_.end());
+    }
+
+    auto min_element() const
+    {
+      return std::min_element(data_.begin(), data_.end());
+    }
+
+    auto min_element()
+    {
+      return std::min_element(data_.begin(), data_.end());
+    }
+
+    auto max_abs_element() const
+    {
+      return std::max_element(data_.begin(), data_.end(),
+                              [](const Scalar& a, const Scalar& b) { return std::abs(a) < std::abs(b); });
+    }
+
+    auto max_abs_element()
+    {
+      return std::max_element(data_.begin(), data_.end(),
+                              [](const Scalar& a, const Scalar& b) { return std::abs(a) < std::abs(b); });
+    }
+
+    auto min_abs_element() const
+    {
+      return std::min_element(data_.begin(), data_.end(),
+                              [](const Scalar& a, const Scalar& b) { return std::abs(a) < std::abs(b); });
+    }
+
+    auto min_abs_element()
+    {
+      return std::min_element(data_.begin(), data_.end(),
+                              [](const Scalar& a, const Scalar& b) { return std::abs(a) < std::abs(b); });
+    }
+
+    std::size_t max_element_index() const
+    {
+      return std::distance(data_.begin(), max_element());
+    }
+
+    std::size_t min_element_index() const
+    {
+      return std::distance(data_.begin(), min_element());
+    }
+
+    std::size_t max_abs_element_index() const
+    {
+      return std::distance(data_.begin(), max_abs_element());
+    }
+
+    std::size_t min_abs_element_index() const
+    {
+      return std::distance(data_.begin(), min_abs_element());
+    }
+
+
     bool operator==(const matrix& rhs) const
     {
       return data_ == rhs.data_;
@@ -1239,9 +1304,9 @@ namespace owl
   
     template <typename T, std::size_t M, std::size_t N,
       typename Engine = std::mt19937, typename Distribution = std::normal_distribution<T>>
-    matrix<T, M, N> random_matrix()
+    matrix<T, M, N> random_matrix(Engine& engine)
     {
-      static auto generator = std::bind(Distribution(), owl::utils::create_seeded_engine<Engine>());
+      auto generator = std::bind(Distribution(), owl::utils::create_seeded_engine<Engine>());
       matrix<T, M, N> m;
       std::generate(m.begin(), m.end(), generator);
       return m;
@@ -1249,9 +1314,16 @@ namespace owl
     
     template <typename T, std::size_t M,
       typename Engine = std::mt19937, typename Distribution = std::normal_distribution<T>>
-    square_matrix<T, M> random_square_matrix()
+    square_matrix<T, M> random_square_matrix(Engine& engine)
     {
-      return random_matrix<T, M, M, Engine, Distribution>();
+      return random_matrix<T, M, M, Engine, Distribution>(engine);
+    }
+
+    template <typename T, std::size_t M,
+      typename Engine = std::mt19937, typename Distribution = std::normal_distribution<T>>
+    vector<T, M> random_vector(Engine& engine)
+    {
+      return random_matrix<T, M, 1, Engine, Distribution>(engine);
     }
   
     template <typename Scalar>

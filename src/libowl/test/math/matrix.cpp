@@ -102,8 +102,8 @@ namespace test
     auto I = matrix44f::identity();
     auto V = vector4f{1,2,3,4};
     CHECK(approx(I*V) == vector4f(1,2,3,4));
-
-    auto m = random_matrix<float,4,4>();
+    auto engine = owl::utils::create_seeded_engine();
+    auto m = random_matrix<float,4,4>(engine);
     CHECK(approx(invert(m)*m).margin(0.0001) == matrix44f::identity());
 
     matrix33f R;
@@ -121,6 +121,12 @@ namespace test
     auto mat2 = matrix33f(eul2);
     CHECK(approx(mat2).margin(0.000001) == R2);
     auto RX = rotate_x<float,3>(degrees<float>(30));
+
+
+    CHECK(vector3f(1,2,3).max_abs_element_index() == 2);
+    CHECK(vector3f(1,-4,3).max_abs_element_index() == 1);
+    CHECK(vector3f(1,-4,3).max_element_index() == 2);
+
 
   }
 }

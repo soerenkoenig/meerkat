@@ -4,7 +4,7 @@
 
 namespace test
 {
-/*
+
   TEST_CASE( "color_maps", "[math]" )
   {
     using namespace owl::color;
@@ -13,7 +13,7 @@ namespace test
     REQUIRE(colors1->size() == 100);
     REQUIRE(colors1->front() == rgb8u(0,0,0));
     REQUIRE(colors1->back() == rgb8u(255,255,255));
-  }*/
+  }
 }
 
 

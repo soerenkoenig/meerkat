@@ -37,7 +37,6 @@ add_library(owl SHARED
         include/owl/math/physical_properties.hpp
         include/owl/math/quaternion.hpp
         include/owl/math/ray.hpp
-        include/owl/math/rigid_transformation.hpp
         include/owl/math/trafos.hpp
         include/owl/math/triangle.hpp
         include/owl/math/utils.hpp
@@ -68,7 +67,7 @@ add_library(owl SHARED
         include/owl/export.hpp
         include/owl/optional.hpp
         include/owl/variant.hpp
-        )
+        include/owl/math/aabb_tree.hpp include/owl/math/primitive_traits.hpp include/owl/utils/point_utils.hpp)
 
 target_include_directories(owl PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -112,7 +111,7 @@ add_executable(testowl
         test/utils/binary_serialization.cpp
         test/utils/template_utils.cpp
         test/utils/container_traits.cpp
-        test/utils/step_iterator.cpp test/utils/uuid.cpp test/utils/signal.cpp test/utils/base64.cpp test/utils/connected_components.cpp test/utils/progress.cpp test/math/physical_properties.cpp)
+        test/utils/step_iterator.cpp test/utils/uuid.cpp test/utils/signal.cpp test/utils/base64.cpp test/utils/connected_components.cpp test/utils/progress.cpp test/math/physical_properties.cpp test/math/aabb_tree.cpp)
 
 target_link_libraries(testowl
         owl)

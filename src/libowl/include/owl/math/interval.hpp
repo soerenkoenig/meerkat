@@ -11,6 +11,7 @@
 #pragma once
 
 #include "owl/math/matrix.hpp"
+#include "owl/math/primitive_traits.hpp"
 
 namespace owl
 {
@@ -18,29 +19,6 @@ namespace owl
   {
     namespace detail
     {
-      template <typename T>
-      struct dimension_t
-      {
-        static constexpr std::size_t value = 1;
-      };
-    
-      template <typename Scalar, std::size_t Dimension>
-      struct dimension_t<vector<Scalar,Dimension>>
-      {
-        static constexpr std::size_t value = Dimension;
-      };
-
-      template <typename T>
-      struct scalar_t
-      {
-        using type = T;
-      };
-    
-      template <typename Scalar, std::size_t Dimension>
-      struct scalar_t<vector<Scalar,Dimension>>
-      {
-        using type = Scalar;
-      };
 
       template <typename Scalar, std::size_t Dimension>
       struct interval_helper
@@ -346,8 +324,8 @@ namespace owl
     auto bounds(ValueRange&& values)
     {
       using Value = std::decay_t<decltype(*std::begin(values))>;
-      using Scalar = typename detail::scalar_t<Value>::type;
-      interval<Scalar, detail::dimension_t<Value>::value, LowerBoundOpen, UpperBoundOpen> b;
+      using Scalar = typename scalar_t<Value>::type;
+      interval<Scalar, dimension_t<Value>::value, LowerBoundOpen, UpperBoundOpen> b;
       for(const auto& v : values)
         b.insert(v);
   

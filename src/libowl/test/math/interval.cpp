@@ -11,6 +11,7 @@ namespace test
     box<float> b;
     b.insert(vector3f(-1.0f,-1.0f,-1.0f));
     b.insert(vector3f(1,1,1));
+    auto x = b.extents().max_element_index();
     CHECK(b.inside(vector3f(0,0,0)));
     interval<int,1,false,true> i1(0,1);
     interval<int,1,false,true> i2(1,2);
@@ -20,6 +21,7 @@ namespace test
     interval<int,1,false,false> i5(1,2);
     auto i6 = i4.intersect(i5);
     CHECK(!i6.empty());
+
 
 
     interval<float> range;
