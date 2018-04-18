@@ -1,6 +1,7 @@
 
 
 #include "owl/math/mesh.hpp"
+#include "owl/math/mesh_primitives.hpp"
 #include "owl/math/point_utils.hpp"
 #include "owl/math/aabb_tree.hpp"
 #include "owl/math/mesh.hpp"
@@ -12,7 +13,7 @@ namespace test
   TEST_CASE( "aabb_tree", "[math]" )
   {
     using namespace owl::math;
-    std::size_t n = 1000000;
+    std::size_t n = 10000;
     std::vector<vector3f> points = random_points<float>(n);
     aabb_tree<vector3f> point_tree = make_aabb_tree(points);
     CHECK(point_tree.num_leaf_nodes() + point_tree.num_split_nodes() == point_tree.num_nodes());
@@ -32,10 +33,17 @@ namespace test
         { return r.primitive == points[j]; }) != neighbors.end());
     }
 
-    //mesh<float> m;
+    mesh<float> m = create_icosaeder<float>();
 
-    //aabb_tree<face_handle,>
 
+    auto deref = [&](const vertex_handle& v){ return m.position(v);};
+
+    knn_searcher<vertex_handle, mesh<float>::vector3, float, decltype(deref)> searcher2(m.vertices(), deref );
+
+    auto closest_vertices = searcher2.closest_k_primitives(4,vector3f(10,0,0));
+
+    for(const auto& v : closest_vertices)
+      std::cout << v.primitive << " "<< v.distance() <<" "<< transpose(m.position(v.primitive)) << std::endl;
 
 
   }

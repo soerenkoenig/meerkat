@@ -30,7 +30,7 @@ namespace test
     auto f4 = m.add_face(verts[2], verts[3], verts[0]);
     CHECK(m.check() == 0);
   }
-
+/*
    TEST_CASE( "read dragon", "[math]" )
    {
      using namespace owl::math;
@@ -47,7 +47,7 @@ namespace test
      s.stop();
      std::cout << "reading dragon: " << s.elapsed_time() <<std::endl;
    }
-
+*/
   TEST_CASE( "read raptor", "[math]" )
   {
     using namespace owl::math;

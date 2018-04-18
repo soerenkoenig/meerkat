@@ -343,9 +343,18 @@ namespace owl
 
       void enlarge(const Scalar& factor, const Scalar& offset)
       {
+
         auto c = center();
-        lower_bound = (Scalar(1)-factor) * c + factor * lower_bound - offset;
-        bounds.second = (Scalar(1)-factor) * c + factor * upper_bound + offset;
+        decltype(c) one;
+        if constexpr(Dimension == 1)
+          one = 1;
+        else
+        {
+          for(auto& c : one)
+            c = Scalar(1);
+        }
+        lower_bound = (Scalar(1)-factor) * c + factor * lower_bound - offset*one;
+        upper_bound = (Scalar(1)-factor) * c + factor * upper_bound + offset*one;
       }
 
       auto closest_point(const bound_type &p) const
