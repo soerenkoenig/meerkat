@@ -21,8 +21,7 @@ namespace owl
   {
     template<typename Scalar, typename Engine = std::mt19937>
     std::vector<math::vector<Scalar,3>> random_points(std::size_t n, const math::box<Scalar>& b =
-      {math::vector<Scalar,3>::zero(),math::vector<Scalar,3>::one()},
-                                                              Engine&& engine = utils::create_seeded_engine())
+      {math::vector<Scalar,3>::zero(),math::vector<Scalar,3>::one()}, Engine&& engine = utils::create_seeded_engine())
     {
       std::array<std::uniform_real_distribution<Scalar>,3> dist;
 

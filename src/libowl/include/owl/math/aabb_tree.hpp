@@ -11,9 +11,12 @@
 
 #include <stack>
 #include <memory>
+#include <queue>
+#include <limits>
 
 #include "owl/math/interval.hpp"
 #include "owl/math/primitive_traits.hpp"
+#include "owl/math/point_utils.hpp"
 
 
 namespace owl
@@ -24,6 +27,12 @@ namespace owl
     vector<Scalar,Dimension> reference_point(const vector<Scalar,Dimension>& v)
     {
       return v;
+    };
+
+    template<typename Scalar, std::size_t Dimension>
+    const vector<Scalar,Dimension>& closest_point(const vector<Scalar,Dimension>& prim,  const vector<Scalar,Dimension>& q)
+    {
+      return prim;
     };
 
   template <typename Primitive>
@@ -249,20 +258,6 @@ namespace owl
       return num_leaf_nodes(root_);
     }
 
-    //print information about the aabb tree
-    void print_statistics() const
-    {
-      assert(is_completed());
-      std::cout << "max depth: " << max_depth_ << std::endl;
-      std::cout << "min size: " << min_size_ << std::endl;
-      std::cout << "tree depth: " << depth() << std::endl;
-      std::cout << "num nodes: "<<num_nodes() <<std::endl;
-      std::cout << "num split nodes: " << num_split_nodes() << std::endl;
-      std::cout << "num leaf nodes: " << num_leaf_nodes() << std::endl;
-    }
-
-
-
   protected:
 
     //return depth of subtree  with node as root
@@ -387,27 +382,144 @@ namespace owl
     }
 
 
-/*
+
+
+
     //search entry used internally for nearest and k nearest primitive queries
-     struct search_entry
-     {
-       //squared distance to node from query point
-       scalar sqr_distance;
-       //node
-       const aabb_node* node;
 
-       //constructor
-       search_entry(const aabb_node* node, scalar sqr_distance)
-         : sqr_distance(sqr_distance),node(node){}
+    template<typename Primitive>
+    class knn_searcher
+    {
+    public:
+      using aabb_tree =  aabb_tree<Primitive>;
+      using scalar =  typename aabb_tree::scalar;
+      using vector = typename aabb_tree::vector;
+      using aabb_node = typename aabb_tree::aabb_node;
+      using aabb_split_node = typename aabb_tree::aabb_split_node;
+      using aabb_leaf_node = typename aabb_tree::aabb_leaf_node;
 
-       //search entry a < b means a.sqr_distance > b. sqr_distance
-       bool operator<(const search_entry& e) const
-       {
-         return sqr_distance > e.sqr_distance;
-       }
-     };
+      struct search_entry
+      {
+        //squared distance to node from query point
+        scalar sqr_distance;
+        //node
+        const aabb_node* node;
 
-     struct intersection_entry
+        //constructor
+        search_entry(const aabb_node* node, scalar sqr_distance)
+          : sqr_distance(sqr_distance),node(node){}
+
+        //search entry a < b means a.sqr_distance > b. sqr_distance
+        bool operator<(const search_entry& e) const
+        {
+          return sqr_distance > e.sqr_distance;
+        }
+      };
+
+      //result entry for nearest and k nearest primitive queries
+      struct result_entry
+      {
+        //squared distance from query point to primitive
+        scalar sqr_distance;
+        //pointer to primitive
+        Primitive primitive;
+        //default constructor
+        result_entry()
+          : sqr_distance(std::numeric_limits<scalar>::infinity())
+        {}
+        //constructor
+        result_entry(const scalar& sqr_distance, const Primitive& p)
+          : sqr_distance(sqr_distance)
+          , primitive(p)
+        {}
+
+        //result_entry are sorted by their sqr_distance using this less than operator
+        bool operator<(const result_entry& e) const
+        {
+          return sqr_distance < e.sqr_distance;
+        }
+      };
+
+
+      template <typename PrimitiveRange>
+      knn_searcher(const PrimitiveRange& primitives)
+        : tree_(make_aabb_tree(primitives))
+      {}
+
+      std::vector<result_entry> closest_k_primitives(std::size_t k, const vector& q) const
+      {
+        assert(is_completed());
+        if (tree_.root() == nullptr)
+          return std::vector<result_entry>();
+        std::priority_queue<result_entry> kbest;
+        std::priority_queue<search_entry> queue;
+        queue.push(search_entry(tree_.root().get(), tree_.root()->bounds().sqr_distance(q)));
+
+        while (!queue.empty())
+        {
+          search_entry entry = queue.top();
+          queue.pop();
+          scalar kbest_dist = std::numeric_limits<scalar>::infinity();
+
+          if (kbest.size() == k)
+            kbest_dist = kbest.top().sqr_distance;
+
+          if (entry.sqr_distance > kbest_dist)
+            break;
+
+          if (entry.node->is_leaf())
+          {
+            aabb_leaf_node *leaf = (aabb_leaf_node *) entry.node;
+            for(const auto& prim : leaf->primitives())
+
+            {
+              auto p = closest_point(prim, q);
+              scalar dist = sqr_distance(prim, q);
+              if (dist < kbest_dist)
+              {
+                if (kbest.size() == k)
+                  kbest.pop();
+                kbest.push(result_entry(dist, prim));
+              }
+            }
+          } else //not a leaf
+          {
+            aabb_split_node *split = (aabb_split_node *) entry.node;
+
+            aabb_node *left = split->left().get();
+            scalar left_distance = sqr_distance(left->bounds(), q);
+
+            aabb_node *right = split->right().get();
+            scalar right_distance = sqr_distance(right->bounds(), q);
+
+            queue.push(search_entry(left, left_distance));
+            queue.push(search_entry(right, right_distance));
+          }
+        }
+
+        std::vector<result_entry> result(kbest.size());
+        auto rend = result.end();
+        for(auto rit = result.begin(); rit != rend; ++rit)
+        {
+          *rit = kbest.top();
+          kbest.pop();
+        }
+        return result;
+      }
+
+private:
+      aabb_tree tree_;
+
+    };
+
+
+
+
+
+
+
+
+   /*  struct intersection_entry
      {
        //squared distance to node from query point
        ray_segment<scalar,3> ray;
@@ -425,68 +537,7 @@ namespace owl
      };*/
   /*
    *
-    //closest k primitive computation
-    std::vector<typename primitive_list<prim>::result_entry> closest_k_primitives(std::size_t k,const vec3& q) const
-    {
-      assert(is_completed());
-      if(root == nullptr)
-        return std::vector<typename primitive_list<prim>::result_entry>();
-      std::priority_queue<typename primitive_list<prim>::result_entry> kbest;
-      std::priority_queue<search_entry> queue;
-      queue.push(search_entry(root,root->get_bounds().sqr_distance(q)));
 
-      while(!queue.empty())
-      {
-        search_entry entry = queue.top();
-        queue.pop();
-        scalar kbest_dist = std::numeric_limits<scalar>::infinity();
-
-        if(kbest.size() == k)
-          kbest_dist = kbest.top().sqr_distance;
-
-        if(entry.sqr_distance > kbest_dist)
-          break;
-
-        if(entry.node->is_leaf())
-        {
-          aabb_leaf_node* leaf = (aabb_leaf_node*)entry.node;
-          auto pend = leaf->primitives_end();
-          for(auto pit  = leaf->primitives_begin(); pit !=  pend; ++pit)
-          {
-            vec3 p = geometry_processing::closest_point(get_primitive(*pit),q);
-            scalar dist = geometry_processing::sqr_distance(this->get_primitive(*pit),q);
-            if( dist < kbest_dist)
-            {
-              if(kbest.size() == k)
-                kbest.pop();
-              kbest.push(typename primitive_list<prim>::result_entry(dist,*pit));
-            }
-          }
-        }
-        else //not a leaf
-        {
-          aabb_split_node* split = (aabb_split_node*)entry.node;
-
-          aabb_node *left = split->left();
-          scalar left_distance = geometry_processing::sqr_distance(left->get_bounds(),q);
-
-          aabb_node *right = split->right();
-          scalar right_distance = geometry_processing::sqr_distance(right->get_bounds(),q);
-
-          queue.push(search_entry(left,left_distance));
-          queue.push(search_entry(right,right_distance));
-        }
-      }
-
-      std::vector<typename primitive_list<prim>::result_entry> result(kbest.size());
-      auto rend = result.end();
-      for(auto rit = result.begin(); rit != rend; ++rit)
-      {
-        *rit = kbest.top();
-        kbest.pop();
-      }
-      return result;
-    }
 
     //return all primitives whose closest point p has a distance to q <= radius
     virtual std::vector<primitive_handle> query_ball(const vec3& q, scalar radius) const

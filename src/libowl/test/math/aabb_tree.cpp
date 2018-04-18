@@ -12,11 +12,25 @@ namespace test
   TEST_CASE( "aabb_tree", "[math]" )
   {
     using namespace owl::math;
-
-    std::vector<vector3f> points = random_points<float>(10000000);
+    std::size_t n = 1000000;
+    std::vector<vector3f> points = random_points<float>(n);
     aabb_tree<vector3f> point_tree = make_aabb_tree(points);
     CHECK(point_tree.num_leaf_nodes() + point_tree.num_split_nodes() == point_tree.num_nodes());
 
+
+    knn_searcher<vector3f> searcher(points);
+
+    vector3f q(1,2,3);
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 eng(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<std::size_t> dist(0, n-1);
+    for(std::size_t i = 0; i < 10; ++i)
+    {
+      std::size_t j = dist(eng);
+      auto neighbors = searcher.closest_k_primitives(5, points[j]);
+      CHECK(std::find_if(neighbors.begin(), neighbors.end(), [&](const auto &r)
+        { return r.primitive == points[j]; }) != neighbors.end());
+    }
 
     //mesh<float> m;
 

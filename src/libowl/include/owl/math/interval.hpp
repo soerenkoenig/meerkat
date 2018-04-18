@@ -166,147 +166,205 @@ namespace owl
     template <typename Scalar, std::size_t Dimension = 1, bool LowerBoundOpen = false, bool UpperBoundOpen = true>
     class interval
     {
-      using helper_type_ = typename detail::interval_helper<Scalar,Dimension>;
-      
+      using helper_type_ = typename detail::interval_helper<Scalar, Dimension>;
+
     public:
       using scalar_type = Scalar;
       using bound_type = typename helper_type_::bound_type;
-      
+
       interval()
-       : bounds{{helper_type_::max(), helper_type_::lowest()}}
+        : bounds{{helper_type_::max(), helper_type_::lowest()}}
       {
       }
-      
-      interval(const bound_type& b)
+
+      interval(const bound_type &b)
         : bounds{b, b}
       {
       }
-      
-      interval(const bound_type& lo, const bound_type& hi)
+
+      interval(const bound_type &lo, const bound_type &hi)
         : bounds{{lo, hi}}
       {
       }
-      
+
       void clear()
       {
         *this = interval();
       }
-      
-      bool overlaps(const interval& other) const
+
+      bool overlaps(const interval &other) const
       {
-         return !intersect(other).empty();
+        return !intersect(other).empty();
       }
-      
-      bool inside(const bound_type& p) const
+
+      bool inside(const bound_type &p) const
       {
         return helper_type_::template inside<LowerBoundOpen, UpperBoundOpen>(lower_bound, upper_bound, p);
       }
-      
-      bool inside(const interval& other) const
+
+      bool inside(const interval &other) const
       {
         return inside(other.lower_bound) && inside(other.upper_bound);
       }
-    
-      interval intersect(const interval& other) const
+
+      interval intersect(const interval &other) const
       {
-        return { helper_type_::maximum(lower_bound, other.lower_bound),
-         helper_type_::minimum(upper_bound, other.upper_bound)};
+        return {helper_type_::maximum(lower_bound, other.lower_bound),
+                helper_type_::minimum(upper_bound, other.upper_bound)};
       }
-    
+
       auto center() const
       {
         return (lower_bound + upper_bound) / 2;
       }
-    
+
       //ensures p is inside the interval
-      void insert(const bound_type& p)
+      void insert(const bound_type &p)
       {
         if constexpr(LowerBoundOpen)
           lower_bound = helper_type_::minimum(lower_bound, helper_type_::prev(p));
         else
           lower_bound = helper_type_::minimum(lower_bound, p);
-          
+
         if constexpr(UpperBoundOpen)
           upper_bound = helper_type_::maximum(upper_bound, helper_type_::next(p));
         else
           upper_bound = helper_type_::maximum(upper_bound, p);
       }
-    
+
       bool empty() const
       {
-        return helper_type_::template empty<LowerBoundOpen,UpperBoundOpen>(lower_bound, upper_bound);
+        return helper_type_::template empty<LowerBoundOpen, UpperBoundOpen>(lower_bound, upper_bound);
       }
-    
+
       auto extents() const
       {
         return upper_bound - lower_bound;
       }
-    
-      const auto& left() const
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      const auto &left() const
       {
         return lower_bound.x();
       }
-    
-      auto& left()
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      auto &left()
       {
         return lower_bound.x();
       }
-    
-      const auto& right() const
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      const auto &right() const
       {
         return upper_bound.x();
       }
-    
-      auto& right()
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      auto &right()
       {
         return upper_bound.x();
       }
-    
-      const auto& top() const
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      const auto &top() const
       {
         return lower_bound.y();
       }
-    
-      auto& top()
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      auto &top()
       {
         return lower_bound.y();
       }
-    
-      const auto& bottom() const
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      const auto &bottom() const
       {
         return upper_bound.y();
       }
-    
-      auto& bottom()
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      auto &bottom()
       {
         return upper_bound.y();
       }
-    
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      const auto &near() const
+      {
+        return lower_bound.z();
+      }
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      auto &near()
+      {
+        return lower_bound.z();
+      }
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      const auto &far() const
+      {
+        return upper_bound.z();
+      }
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+      auto &far()
+      {
+        return upper_bound.z();
+      }
+
       auto width() const
       {
         return upper_bound[0] - lower_bound[0];
       }
-    
-      template <bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 2>>
       auto height() const
       {
         return upper_bound[1] - lower_bound[1];
       }
-    
-      template <bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 3>>
+
+      template<bool Dummy = true, typename = std::enable_if_t<Dummy && Dimension >= 3>>
       auto depth() const
       {
         return upper_bound[2] - lower_bound[2];
       }
-      
-      bool operator==(const interval& other) const
+
+      bool operator==(const interval &other) const
       {
         return bounds == other.bounds;
       }
-      
-      bool operator!=(const interval& other) const
+
+      bool operator!=(const interval &other) const
       {
         return bounds != other.bounds;
+      }
+
+      void enlarge(const Scalar& factor, const Scalar& offset)
+      {
+        auto c = center();
+        lower_bound = (Scalar(1)-factor) * c + factor * lower_bound - offset;
+        bounds.second = (Scalar(1)-factor) * c + factor * upper_bound + offset;
+      }
+
+      auto closest_point(const bound_type &p) const
+      {
+        bound_type q;
+        if constexpr (Dimension == 1)
+        {
+          q = (std::min)((std::max)(p, lower_bound), upper_bound);
+        }
+        else
+        {
+          for (std::size_t i = 0; i < Dimension; ++i)
+            q[i] = (std::min)((std::max)(p[i], lower_bound[i]), upper_bound[i]);
+        }
+        return q;
+      }
+      auto sqr_distance(const bound_type& q) const
+      {
+        return math::sqr_distance(q, closest_point(q));
       }
     
       union
@@ -319,6 +377,20 @@ namespace owl
         };
       };
     };
+
+    template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen, bool UpperBoundOpen>
+    auto sqr_distance(const interval<Scalar,Dimension,LowerBoundOpen,UpperBoundOpen>& inter,
+                      const typename interval<Scalar,Dimension,LowerBoundOpen,UpperBoundOpen>::bound_type& q)
+    {
+      return inter.sqr_distance(q);
+    }
+
+    template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen, bool UpperBoundOpen>
+    auto closest_point(const interval<Scalar,Dimension,LowerBoundOpen,UpperBoundOpen>& inter,
+                      const typename interval<Scalar,Dimension,LowerBoundOpen,UpperBoundOpen>::bound_type& q)
+    {
+      return inter.closest_point(q);
+    }
   
     template <typename ValueRange, bool LowerBoundOpen = false, bool UpperBoundOpen = true>
     auto bounds(ValueRange&& values)

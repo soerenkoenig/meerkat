@@ -38,6 +38,12 @@ namespace owl
       {
         return i == N ? (T)1 : 0;
       }
+
+      template <typename T, T value>
+      constexpr T filled(std::size_t)
+      {
+        return value;
+      }
   
       template <typename T>
       constexpr T zero(std::size_t)
@@ -1325,6 +1331,19 @@ namespace owl
     vector<T, M> random_vector(Engine& engine)
     {
       return random_matrix<T, M, 1, Engine, Distribution>(engine);
+    }
+
+    template <typename Scalar, std::size_t Dimension>
+    Scalar sqr_distance(const vector<Scalar,Dimension>& a, const vector<Scalar,Dimension>& b)
+    {
+      auto v = a-b;
+      return v.sqr_length();
+    }
+
+    template <typename Scalar, std::size_t Dimension>
+    Scalar distance(const vector<Scalar,Dimension>& a, const vector<Scalar,Dimension>& b)
+    {
+      return std::sqrt(sqr_distance(a,b));
     }
   
     template <typename Scalar>
