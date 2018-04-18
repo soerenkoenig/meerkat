@@ -118,7 +118,7 @@ namespace owl
         if(x <= 1.0f / 5.0f)
           col(0) = channel_traits<Channel>::convert(1.0f);
         else if(x > 1.0f / 5.0f && x <= 2.0f / 5.0f)
-          col(0) = -5.0f * x + 2.0f;
+          col(0) = channel_traits<Channel>::convert(-5.0f * x + 2.0f);
         else if(x > 4.0f / 5.0f)
           col(0) = channel_traits<Channel>::convert(5.0f * x - 4.0f);
 
@@ -187,7 +187,7 @@ namespace owl
       map.resize(steps);
     
       std::vector<float> x(steps);
-      utils::lin_space(x.begin(),x.end(), 0, 1);
+      utils::lin_space(x.begin(),x.end(), 0.0f, 1.0f);
     
         for(std::size_t i = 0; i < steps; i++)
         {

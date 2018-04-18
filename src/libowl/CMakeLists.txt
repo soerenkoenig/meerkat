@@ -17,6 +17,7 @@ add_library(owl SHARED
         include/owl/color/color.hpp
         include/owl/color/color_conversion.hpp
         include/owl/color/color_names.hpp
+        include/owl/color/color_maps.hpp
         include/owl/color/gamma_correction.hpp
         include/owl/image/image.hpp
         include/owl/image/image_io.hpp
