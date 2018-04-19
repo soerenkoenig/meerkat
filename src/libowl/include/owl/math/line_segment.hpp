@@ -28,8 +28,38 @@ namespace owl
       line_segment() = default;
     
       line_segment(const vector& start, const vector& end)
-        : points{start, end}
+        : vertices{start, end}
       {
+      }
+
+      bool operator==(const line_segment& other) const
+      {
+        return vertices == other.vertices;
+      }
+
+      bool operator!=(const line_segment& other) const
+      {
+        return vertices != other.vertices;
+      }
+
+      bool operator<(const line_segment& other) const
+      {
+        return vertices < other.vertices;
+      }
+
+      bool operator<=(const line_segment& other) const
+      {
+        return vertices <= other.vertices;
+      }
+
+      bool operator>(const line_segment& other) const
+      {
+        return vertices > other.vertices;
+      }
+
+      bool operator>=(const line_segment& other) const
+      {
+        return vertices >= other.vertices;
       }
 
 
@@ -62,7 +92,7 @@ namespace owl
     
       union
       {
-        std::array<vector, 2> points;
+        std::array<vector, 2> vertices;
         struct
         {
           vector start;
@@ -70,8 +100,6 @@ namespace owl
         };
       };
     };
-
-
 
 
     template <typename Scalar, std::size_t Dimension>
@@ -93,13 +121,13 @@ namespace owl
     template <typename Scalar, std::size_t Dimension>
     vector<Scalar,Dimension> reference_point(const line_segment<Scalar,Dimension>& l)
     {
-      return (l.start + l.end)/Scalar(2);
+      return (l.start + l.end) / Scalar(2);
     }
 
     template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen = false, bool UpperBoundOpen = false>
-    interval<Scalar,Dimension,LowerBoundOpen, UpperBoundOpen> bounds(const line_segment<Scalar,Dimension>& l)
+    interval<Scalar, Dimension, LowerBoundOpen, UpperBoundOpen> bounds(const line_segment<Scalar, Dimension>& l)
     {
-      interval<Scalar,Dimension,LowerBoundOpen, UpperBoundOpen> b;
+      interval<Scalar,Dimension, LowerBoundOpen, UpperBoundOpen> b;
       b.insert(l.start);
       b.insert(l.end);
       return b;

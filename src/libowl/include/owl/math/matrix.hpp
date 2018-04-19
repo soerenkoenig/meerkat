@@ -1026,9 +1026,17 @@ namespace owl
     template <typename S, std::size_t N, std::size_t M>
     std::ostream& operator<<(std::ostream& out, const matrix<S, N, M>& m)
     {
-      for(std::size_t i = 0; i < N; ++i)
-        for(std::size_t j = 0; j < M; ++j)
-          out << m(i, j) << ((j == M - 1) ? (i < N-1 ? "\n" : "") : " ");
+      if constexpr (M == 1)
+      {
+        for(std::size_t i = 0; i < N; ++i)
+          out << m(i) <<  (i < N-1 ? " " : "");
+      }
+      else
+      {
+        for (std::size_t i = 0; i < N; ++i)
+          for (std::size_t j = 0; j < M; ++j)
+            out << m(i, j) << ((j == M - 1) ? (i < N - 1 ? "\n" : "") : " ");
+      }
       return out;
     }
   
@@ -1040,6 +1048,8 @@ namespace owl
           out << static_cast<int>(m(i, j)) << ((j == M - 1) ? (i < N-1 ? "\n": "") : " ");
       return out;
     }
+
+
   
     template <typename S, std::size_t M, std::size_t N>
     std::istream& operator>>(std::istream& in, matrix<S, M, N>& m)

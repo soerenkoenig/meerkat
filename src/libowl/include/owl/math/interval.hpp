@@ -347,6 +347,7 @@ namespace owl
         return bounds != other.bounds;
       }
 
+
       void enlarge(const Scalar& factor, const Scalar& offset)
       {
 
@@ -407,7 +408,7 @@ namespace owl
       return inter.closest_point(q);
     }
   
-    template <typename ValueRange, bool LowerBoundOpen = false, bool UpperBoundOpen = true>
+    template <typename ValueRange, bool LowerBoundOpen = false, bool UpperBoundOpen = true, typename = typename utils::is_iterable<ValueRange>::value>
     auto bounds(ValueRange&& values)
     {
       using Value = std::decay_t<decltype(*std::begin(values))>;

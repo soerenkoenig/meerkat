@@ -579,7 +579,7 @@ namespace owl
       {
         if (!tree_.root())
           return std::nullopt;
-        result_entry kbest;
+        result_entry best;
         std::priority_queue<search_entry> queue;
         queue.push(search_entry(tree_.root().get(), tree_.root()->bounds().sqr_distance(q)));
 
@@ -588,7 +588,7 @@ namespace owl
           search_entry entry = queue.top();
           queue.pop();
 
-          if (entry.sqr_distance > kbest.sqr_distance)
+          if (entry.sqr_distance > best.sqr_distance)
             break;
 
           if (entry.node->is_leaf())
@@ -598,9 +598,9 @@ namespace owl
             {
               auto p = closest_point(tree_.primitive(prim), q);
               scalar dist = sqr_distance(tree_.primitive(prim), q);
-              if (dist < kbest.sqr_distance)
+              if (dist < best.sqr_distance)
               {
-                kbest = result_entry(dist, prim);
+                best = result_entry(dist, prim);
               }
             }
           }
@@ -619,7 +619,7 @@ namespace owl
           }
         }
 
-        return kbest;
+        return best;
       }
 
       std::vector<Primitive> query_ball(const vector &q, scalar radius) const
@@ -707,118 +707,6 @@ namespace owl
      *
 
 
-      //return all primitives whose closest point p has a distance to q <= radius
-      virtual std::vector<primitive_handle> query_ball(const vec3& q, scalar radius) const
-      {
-        assert(is_completed());
-        std::vector<primitive_handle> result;
-        if(root == nullptr)
-          return result;
-
-        scalar r2 = radius*radius;
-        std::priority_queue<search_entry> queue;
-        queue.push(search_entry(root,root->get_bounds().sqr_distance(q)));
-        while(!queue.empty())
-        {
-          search_entry entry = queue.top();
-          queue.pop();
-
-          if(entry.sqr_distance > r2)
-            break;
-
-          if(entry.node->is_leaf())
-          {
-            aabb_leaf_node* leaf = (aabb_leaf_node*)entry.node;
-            auto pend = leaf->primitives_end();
-            for(auto pit  = leaf->primitives_begin(); pit !=  pend; ++pit)
-            {
-              scalar dist = geometry_processing::sqr_distance(this->get_primitive(*pit),q);
-              if( dist <= r2)
-                result.push_back(*pit);
-            }
-          }
-          else //not a leaf
-          {
-
-            aabb_split_node* split = (aabb_split_node*)entry.node;
-
-            //if (split node is completely inside of ball)
-            //{
-            //	add all primitives of subtree
-            //}
-            //else
-            //{
-
-            aabb_node *left = split->left();
-            scalar left_distance = geometry_processing::sqr_distance(left->get_bounds(),q);
-
-            aabb_node *right = split->right();
-            scalar right_distance = geometry_processing::sqr_distance(right->get_bounds(),q);
-
-            queue.push(search_entry(left,left_distance));
-            queue.push(search_entry(right,right_distance));
-            //}
-          }
-        }
-
-        return result;
-      }
-
-      //returns the closest primitive to the point q
-      typename primitive_list<prim>::result_entry closest_primitive(const vec3& q) const
-      {
-        assert(is_completed());
-        if(root == nullptr) {
-          typename primitive_list<prim>::result_entry r;
-          return r;
-        }
-
-        std::priority_queue<search_entry> queue;
-        queue.push(search_entry(root,root->get_bounds().sqr_distance(q)));
-
-        typename primitive_list<prim>::result_entry best;
-
-        while(!queue.empty())
-        {
-          search_entry entry = queue.top();
-          queue.pop();
-
-          if(entry.sqr_distance > best.sqr_distance)
-            break;
-
-          if(entry.node->is_leaf())
-          {
-            aabb_leaf_node* leaf = (aabb_leaf_node*)entry.node;
-            auto pend = leaf->primitives_end();
-            for(auto pit  = leaf->primitives_begin(); pit !=  pend; ++pit)
-            {
-              vec3 p = geometry_processing::closest_point(this->get_primitive(*pit),q);
-              scalar dist = geometry_processing::sqr_distance(this->get_primitive(*pit),q);
-              if(dist < best.sqr_distance)
-              {
-                best.sqr_distance = dist;
-                best.primitive = *pit;
-              }
-            }
-          }
-          else //not a leaf
-          {
-            aabb_split_node* split = (aabb_split_node*)entry.node;
-
-            aabb_node *left = split->left();
-            scalar left_distance = geometry_processing::sqr_distance(left->get_bounds(),q);
-
-            aabb_node *right = split->right();
-            scalar right_distance = geometry_processing::sqr_distance(right->get_bounds(),q);
-
-            queue.push(search_entry(left,left_distance));
-            queue.push(search_entry(right,right_distance));
-          }
-        }
-        return  best;
-
-
-      }
 
       //returns true if there exists an intersection between r and a primitive
       bool any_intersection(const ray_segment<scalar,3>& r) const
