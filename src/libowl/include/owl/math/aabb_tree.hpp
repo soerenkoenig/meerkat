@@ -37,6 +37,12 @@ namespace owl
       return prim;
     };
 
+    template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen = false, bool UpperBoundOpen = false>
+    interval<Scalar,Dimension,LowerBoundOpen, UpperBoundOpen> bounds(const vector<Scalar, Dimension> &prim)
+    {
+      return {prim};
+    }
+
     namespace detail
     {
 
@@ -365,7 +371,7 @@ namespace owl
         aabb b;
 
         for(const auto& p : primitive_list)
-          b.insert(deref_(p));
+          b.insert(math::bounds<scalar,dimension, false, false>(deref_(p)));
         b.enlarge(1,box_offset_eps_);
         return b;
       }
@@ -507,6 +513,8 @@ namespace owl
       {
         tree_.build(std::begin(primitives), std::end(primitives));
       }
+
+
 
       std::vector<result_entry> closest_k_primitives(std::size_t k, const vector &q) const
       {
@@ -664,6 +672,13 @@ namespace owl
       aabb_tree tree_;
 
     };
+
+
+   /* template<typename PrimitiveRange, typename Deref>
+    knn_searcher(const PrimitiveRange &, Deref deref) -> knn_searcher<decltype(*std::begin(std::declval<PrimitiveRange>())),
+      Deref>;*/
+
+
 
 
 

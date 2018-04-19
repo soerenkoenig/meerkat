@@ -11,6 +11,7 @@
 #include "owl/optional.hpp"
 #include "owl/math/matrix.hpp"
 #include "owl/math/ray.hpp"
+#include "owl/math/interval.hpp"
 
 namespace owl
 {
@@ -23,11 +24,14 @@ namespace owl
     public:
       using scalar = Scalar;
       using vector = vector<Scalar, Dimension>;
+
+      line_segment() = default;
     
       line_segment(const vector& start, const vector& end)
         : points{start, end}
       {
       }
+
 
       void closest_point_barycentric(const vector& p, scalar& l0, scalar& l1) const
       {
@@ -67,8 +71,11 @@ namespace owl
       };
     };
 
+
+
+
     template <typename Scalar, std::size_t Dimension>
-    vector<Scalar,3> closest_point(const line_segment<Scalar,Dimension>& l, vector<Scalar,3> q)
+    vector<Scalar,Dimension> closest_point(const line_segment<Scalar,Dimension>& l, vector<Scalar,Dimension> q)
     {
       Scalar l0,l1;
       l.closest_point_barycentric(q,l0,l1);
@@ -76,7 +83,7 @@ namespace owl
     };
 
     template <typename Scalar, std::size_t Dimension>
-    Scalar sqr_distance(const line_segment<Scalar,Dimension>& l, vector<Scalar,3> q)
+    Scalar sqr_distance(const line_segment<Scalar,Dimension>& l, vector<Scalar,Dimension> q)
     {
       auto d = q - closest_point(l,q);
       return dot(d,d);
@@ -84,16 +91,24 @@ namespace owl
 
 
     template <typename Scalar, std::size_t Dimension>
-    vector<Scalar,3> reference_point(const line_segment<Scalar,Dimension>& l)
+    vector<Scalar,Dimension> reference_point(const line_segment<Scalar,Dimension>& l)
     {
       return (l.start + l.end)/Scalar(2);
+    }
+
+    template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen = false, bool UpperBoundOpen = false>
+    interval<Scalar,Dimension,LowerBoundOpen, UpperBoundOpen> bounds(const line_segment<Scalar,Dimension>& l)
+    {
+      interval<Scalar,Dimension,LowerBoundOpen, UpperBoundOpen> b;
+      b.insert(l.start);
+      b.insert(l.end);
+      return b;
     }
   
     using line_segment3f = line_segment<float, 3>;
     using line_segment3d = line_segment<double, 3>;
     using line_segment2f = line_segment<float, 2>;
     using line_segment2d = line_segment<double, 2>;
-
   }
 }
 

@@ -218,6 +218,12 @@ namespace owl
         return (lower_bound + upper_bound) / 2;
       }
 
+      void insert(const interval &inter)
+      {
+          insert(lower_bound);
+          insert(upper_bound);
+      }
+
       //ensures p is inside the interval
       void insert(const bound_type &p)
       {
