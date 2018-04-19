@@ -49,14 +49,17 @@ namespace owl
       };
     }
 
-    template<typename Primitive, typename Vector = typename vector_t<Primitive>::type,
-      typename Scalar = typename scalar_t<Primitive>::type, typename Deref = detail::default_deref>
+    template<typename Primitive,
+      typename Deref = detail::default_deref,
+      typename Vector = typename vector_t<decltype(std::declval<Deref>()(std::declval<Primitive>()))>::type,
+      typename Scalar = typename scalar_t<Vector>::type>
     class aabb_tree
     {
     public:
       using vector = Vector;
+      static constexpr std::size_t dimension = dimension_t<vector>::value;
       using scalar = Scalar;
-      using aabb = box<scalar>;
+      using aabb = interval<scalar, dimension, false, false>;
 
 
       //abstract base class defining the common interface of all aabb tree node
@@ -148,15 +151,20 @@ namespace owl
 
         aabb_split_node &operator=(aabb_split_node &&) noexcept = default;
 
+        aabb_split_node(const aabb &b)
+          : aabb_node(b)
+        {}
+
         //construct a split node from given left and right child pointers and given bounding box b of the node
         aabb_split_node(aabb_node *left_child, aabb_node *right_child, const aabb &b)
-          : aabb_node(b), children_{std::unique_ptr<aabb_node>(left_child), std::unique_ptr<aabb_node>(right_child)}
+          : aabb_node(b)
+          , children_{std::unique_ptr<aabb_node>(left_child), std::unique_ptr<aabb_node>(right_child)}
         {
         }
 
         std::unique_ptr<aabb_node> clone() const override
         {
-          std::unique_ptr<aabb_split_node> copy;
+          auto copy = std::make_unique<aabb_split_node>(this->bounds());
           if (left())
             copy->left() = left()->clone();
           if (right())
@@ -205,8 +213,12 @@ namespace owl
 
       //copy constructor
       aabb_tree(const aabb_tree &other)
+        : max_depth_ (other.max_depth_)
+        , min_size_( other.min_size_)
+        , root_( other.root_ ? other.root_->clone() : nullptr)
+        , deref_( other.deref_)
       {
-        *this = other;
+
       }
 
       //move constructor
@@ -424,12 +436,14 @@ namespace owl
 
     //search entry used internally for nearest and k nearest primitive queries
 
-    template<typename Primitive, typename Vector = typename vector_t<Primitive>::type,
-      typename Scalar = typename scalar_t<Primitive>::type, typename Deref = detail::default_deref>
+    template<typename Primitive,
+      typename Deref = detail::default_deref,
+      typename Vector = typename vector_t<decltype(std::declval<Deref>()(std::declval<Primitive>()))>::type,
+      typename Scalar = typename scalar_t<Vector>::type>
     class knn_searcher
     {
     public:
-      using aabb_tree =  aabb_tree<Primitive, Vector, Scalar, Deref>;
+      using aabb_tree =  aabb_tree<Primitive,Deref, Vector, Scalar>;
       using scalar =  typename aabb_tree::scalar;
       using vector = typename aabb_tree::vector;
       using aabb_node = typename aabb_tree::aabb_node;
@@ -515,7 +529,7 @@ namespace owl
 
           if (entry.node->is_leaf())
           {
-            aabb_leaf_node *leaf = (aabb_leaf_node *) entry.node;
+            const aabb_leaf_node *leaf = static_cast<const aabb_leaf_node *>(entry.node);
             for (const auto &prim : leaf->primitives())
             {
               auto p = closest_point(tree_.primitive(prim), q);
@@ -529,7 +543,7 @@ namespace owl
             }
           } else //not a leaf
           {
-            aabb_split_node *split = (aabb_split_node *) entry.node;
+            const aabb_split_node *split = static_cast<const aabb_split_node *>(entry.node);
 
             aabb_node *left = split->left().get();
             scalar left_distance = sqr_distance(left->bounds(), q);

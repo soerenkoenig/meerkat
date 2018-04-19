@@ -122,6 +122,7 @@ namespace owl
       using vector3 = vector<3>;
       using vector2 = vector<2>;
       using box = box<Scalar>;
+      using line_segment_t = line_segment<Scalar,3>;
       using color_t = color::rgba8u;
     
       template <typename Range>
@@ -204,7 +205,7 @@ namespace owl
           return target(he);
         };
       
-        return make_handle_range(incoming(v), step, deref);
+        return make_handle_circulator_range(incoming(v), step, deref);
       }
     
       auto incoming_halfedges(vertex_handle v) const
@@ -307,6 +308,7 @@ namespace owl
       {
         return vertex_properties_[vertex_position_handle_][v.index()];
       }
+
 
       const vector2& texcoord(halfedge_handle he) const
       {
@@ -985,6 +987,11 @@ namespace owl
       std::size_t valence(Handle h) const
       {
         return std::size(vertices(h));
+      }
+
+      line_segment_t line_segment(edge_handle e) const
+      {
+        return {position(origin(e)),position(target(e))};
       }
 
       bool is_n_gon_mesh(std::size_t n) const

@@ -22,8 +22,8 @@ namespace test
     knn_searcher<vector3f> searcher(points);
 
     vector3f q(1,2,3);
-    std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    std::mt19937 eng(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::random_device rd;
+    std::mt19937 eng(rd());
     std::uniform_int_distribution<std::size_t> dist(0, n-1);
     for(std::size_t i = 0; i < 10; ++i)
     {
@@ -38,7 +38,9 @@ namespace test
 
     auto deref = [&](const vertex_handle& v){ return m.position(v);};
 
-    knn_searcher<vertex_handle, mesh<float>::vector3, float, decltype(deref)> searcher2(m.vertices(), deref );
+    knn_searcher<vertex_handle, decltype(deref)> searcher2(m.vertices(), deref );
+
+    auto x = searcher2;
 
     auto closest_vertices = searcher2.closest_k_primitives(4,vector3f(10,0,0));
 
