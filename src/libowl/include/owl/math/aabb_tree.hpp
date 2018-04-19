@@ -14,6 +14,7 @@
 #include <queue>
 #include <limits>
 
+#include "owl/optional.hpp"
 #include "owl/math/interval.hpp"
 #include "owl/math/primitive_traits.hpp"
 #include "owl/math/point_utils.hpp"
@@ -564,6 +565,53 @@ namespace owl
           kbest.pop();
         }
         return result;
+      }
+
+      std::optional<result_entry> closest_primitive(const vector &q) const
+      {
+        if (tree_.root() == nullptr)
+          return std::nullopt;
+        result_entry kbest;
+        std::priority_queue<search_entry> queue;
+        queue.push(search_entry(tree_.root().get(), tree_.root()->bounds().sqr_distance(q)));
+
+        while (!queue.empty())
+        {
+          search_entry entry = queue.top();
+          queue.pop();
+
+          if (entry.sqr_distance > kbest.sqr_distance)
+            break;
+
+          if (entry.node->is_leaf())
+          {
+            const aabb_leaf_node *leaf = static_cast<const aabb_leaf_node *>(entry.node);
+            for (const auto &prim : leaf->primitives())
+            {
+              auto p = closest_point(tree_.primitive(prim), q);
+              scalar dist = sqr_distance(tree_.primitive(prim), q);
+              if (dist < kbest.sqr_distance)
+              {
+                kbest = result_entry(dist, prim);
+              }
+            }
+          }
+          else //not a leaf
+          {
+            const aabb_split_node *split = static_cast<const aabb_split_node *>(entry.node);
+
+            aabb_node *left = split->left().get();
+            scalar left_distance = sqr_distance(left->bounds(), q);
+
+            aabb_node *right = split->right().get();
+            scalar right_distance = sqr_distance(right->bounds(), q);
+
+            queue.push(search_entry(left, left_distance));
+            queue.push(search_entry(right, right_distance));
+          }
+        }
+
+        return kbest;
       }
 
     private:
