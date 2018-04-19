@@ -81,9 +81,10 @@ namespace test
 
     std::vector<triangle3f> triangles = {triangle3f({0, 0, 0}, {1, 0, 0}, {0.5, 1, 0}),
                                          triangle3f({0, 0 ,0}, {0.5, 1, 0}, {1, 1, 0})};
-     auto b = bounds(triangle3f({0, 0, 0}, {1, 0, 0}, {0.5, 1, 0}));
-     knn_searcher<triangle3f> searcher6(triangles);
+
+    knn_searcher<triangle3f> searcher6(triangles);
     auto result6 = searcher6.closest_primitive({1,1,0});
+
     CHECK(result6->primitive == triangles[1]);
 
 

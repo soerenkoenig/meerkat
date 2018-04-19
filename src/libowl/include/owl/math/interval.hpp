@@ -429,7 +429,7 @@ namespace owl
     template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen, bool UpperBoundOpen>
     std::ostream& operator<<(std::ostream& out, const interval<Scalar, Dimension, LowerBoundOpen, UpperBoundOpen>& inter)
     {
-      return out << (LowerBoundOpen ? "( ":"[ ") << "("<<transpose(inter.lower_bound)<<")" << ", ("<< transpose(inter.upper_bound)<<") "<< (UpperBoundOpen ? ")":"]");
+      return out << (LowerBoundOpen ? "( ":"[ ") << "(" << inter.lower_bound<<")" << ", ("<< inter.upper_bound<<") "<< (UpperBoundOpen ? ")":"]");
     }
     
     template <typename Scalar, bool LowerBoundOpen = false, bool UpperBoundOpen = true>

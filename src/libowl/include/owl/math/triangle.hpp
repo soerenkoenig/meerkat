@@ -278,6 +278,12 @@ namespace owl
       return b;
     }
 
+    template <typename Scalar, std::size_t Dimension>
+    std::ostream& operator<<(std::ostream& out, const triangle<Scalar, Dimension>& tri)
+    {
+      return out << "(" <<tri.v0 << ") , ("<< tri.v1 <<"), ("<< tri.v2 <<  ")";
+    }
+
     using triagnle2f = triangle<float, 2>;
     using triangle3f = triangle<float, 3>;
     using triangle2d = triangle<double, 2>;

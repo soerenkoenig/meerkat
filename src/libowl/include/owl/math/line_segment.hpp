@@ -132,6 +132,13 @@ namespace owl
       b.insert(l.end);
       return b;
     }
+
+    template <typename Scalar, std::size_t Dimension>
+    std::ostream& operator<<(std::ostream& out, const line_segment<Scalar, Dimension>& l)
+    {
+      return out << "(" <<l.start << ") -> ("<< l.end << ")";
+    }
+
   
     using line_segment3f = line_segment<float, 3>;
     using line_segment3d = line_segment<double, 3>;
