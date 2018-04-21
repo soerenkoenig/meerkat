@@ -70,7 +70,10 @@ add_library(owl SHARED
         include/owl/optional.hpp
         include/owl/variant.hpp
         include/owl/math/aabb_tree.hpp
-        include/owl/math/primitive_traits.hpp)
+        include/owl/math/primitive_traits.hpp
+        include/owl/math/distance.hpp
+        include/owl/math/ray_segment.hpp
+        include/owl/math/intersection.hpp)
 
 target_include_directories(owl PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -114,7 +117,16 @@ add_executable(testowl
         test/utils/binary_serialization.cpp
         test/utils/template_utils.cpp
         test/utils/container_traits.cpp
-        test/utils/step_iterator.cpp test/utils/uuid.cpp test/utils/signal.cpp test/utils/base64.cpp test/utils/connected_components.cpp test/utils/progress.cpp test/math/physical_properties.cpp test/math/aabb_tree.cpp)
+        test/utils/step_iterator.cpp
+        test/utils/uuid.cpp
+        test/utils/signal.cpp
+        test/utils/base64.cpp
+        test/utils/connected_components.cpp
+        test/utils/progress.cpp
+        test/math/physical_properties.cpp
+        test/math/aabb_tree.cpp
+        test/math/distance.cpp
+        test/math/intersection.cpp)
 
 target_link_libraries(testowl
         owl)

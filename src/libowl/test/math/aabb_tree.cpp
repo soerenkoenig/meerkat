@@ -1,10 +1,6 @@
-
-
 #include "owl/math/mesh.hpp"
 #include "owl/math/mesh_primitives.hpp"
 #include "owl/math/point_utils.hpp"
-
-#include "owl/math/mesh.hpp"
 #include "owl/math/triangle.hpp"
 #include "owl/math/aabb_tree.hpp"
 #include "catch/catch.hpp"

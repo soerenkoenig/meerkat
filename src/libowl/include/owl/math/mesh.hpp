@@ -28,6 +28,7 @@
 #include "owl/math/constants.hpp"
 #include "owl/color/color.hpp"
 #include "owl/math/line_segment.hpp"
+#include "owl/math/triangle.hpp"
 //#include "owl/utils/progress.hpp"
 
 namespace owl
@@ -123,6 +124,7 @@ namespace owl
       using vector2 = vector<2>;
       using box = box<Scalar>;
       using line_segment_t = line_segment<Scalar,3>;
+      using triangle_t = triangle<Scalar,3>;
       using color_t = color::rgba8u;
     
       template <typename Range>
@@ -992,6 +994,15 @@ namespace owl
       line_segment_t line_segment(edge_handle e) const
       {
         return {position(origin(e)),position(target(e))};
+      }
+
+      triangle_t triangle(face_handle f) const
+      {
+        assert(is_triangle(f));
+        auto he0 = inner(f);
+        auto he1 = next(he0);
+        auto he2 = next(he1);
+        return {position(target(he0)), position(target(he1)), position(target(he2))};
       }
 
       bool is_n_gon_mesh(std::size_t n) const

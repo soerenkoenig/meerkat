@@ -18,6 +18,7 @@
 #include "owl/math/interval.hpp"
 #include "owl/math/primitive_traits.hpp"
 #include "owl/math/point_utils.hpp"
+#include "owl/math/distance.hpp"
 
 
 namespace owl
@@ -30,12 +31,6 @@ namespace owl
       return v;
     };
 
-    template<typename Scalar, std::size_t Dimension>
-    const vector <Scalar, Dimension> &
-    closest_point(const vector <Scalar, Dimension> &prim, const vector <Scalar, Dimension> &q)
-    {
-      return prim;
-    };
 
     template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen = false, bool UpperBoundOpen = false>
     interval<Scalar,Dimension,LowerBoundOpen, UpperBoundOpen> bounds(const vector<Scalar, Dimension> &prim)
@@ -522,7 +517,7 @@ namespace owl
           return std::vector<result_entry>();
         std::priority_queue<result_entry> kbest;
         std::priority_queue<search_entry> queue;
-        queue.push(search_entry(tree_.root().get(), tree_.root()->bounds().sqr_distance(q)));
+        queue.push(search_entry(tree_.root().get(), sqr_distance(tree_.root()->bounds(),q)));
 
         while (!queue.empty())
         {
@@ -581,7 +576,7 @@ namespace owl
           return std::nullopt;
         result_entry best;
         std::priority_queue<search_entry> queue;
-        queue.push(search_entry(tree_.root().get(), tree_.root()->bounds().sqr_distance(q)));
+        queue.push(search_entry(tree_.root().get(), sqr_distance(tree_.root()->bounds(),q)));
 
         while (!queue.empty())
         {
@@ -630,7 +625,7 @@ namespace owl
 
         scalar r2 = radius * radius;
         std::priority_queue<search_entry> queue;
-        queue.push(search_entry(tree_.root().get(),tree_.root()->bounds().sqr_distance(q)));
+        queue.push(search_entry(tree_.root().get(),sqr_distance(tree_.root()->bounds(),q)));
         while(!queue.empty())
         {
           search_entry entry = queue.top();

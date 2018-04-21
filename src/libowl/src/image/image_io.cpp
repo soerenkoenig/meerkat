@@ -39,7 +39,7 @@ namespace owl
     void writer(void *context, void *data, int size)
     {
       utils::buffer& buf = *reinterpret_cast<utils::buffer*>(context);
-      buf.append(utils::buffer(data, size, false));
+      buf.append(utils::buffer(data, static_cast<std::size_t>(size), false));
     }
   
     bool write_jpg(const rgb8u_image& img, const std::string &path, int quality)
@@ -92,7 +92,7 @@ namespace owl
         return false;
       }
     
-      img.resize(w,h);
+      img.resize(static_cast<std::size_t>(w),static_cast<std::size_t>(h));
 
       std::copy_n(input_pixels, w * h * 3, reinterpret_cast<stbi_uc*>(img.data()));
 

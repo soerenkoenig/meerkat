@@ -34,7 +34,9 @@ namespace owl
       void set_direction(const vector& direction)
       {
         direction_ = direction;
-        inv_direction_ = vector(scalar(1) / direction.x(), scalar(1) / direction.y(), scalar(1) / direction.z());
+        inv_direction_ = vector(direction.x() == 0 ? scalar(0) : scalar(1) / direction.x(),
+                                direction.y() == 0 ? scalar(0) : scalar(1) / direction.y(),
+                                direction.z() == 0 ? scalar(0) : scalar(1) / direction.z());
       }
       
       vector operator()(const scalar& t) const

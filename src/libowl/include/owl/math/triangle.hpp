@@ -12,6 +12,7 @@
 #include <array>
 #include "owl/math/matrix.hpp"
 #include "owl/math/interval.hpp"
+#include "owl/math/ray.hpp"
 
 namespace owl
 {
@@ -25,6 +26,7 @@ namespace owl
       using scalar = Scalar;
       using vector = math::vector<Scalar, Dimension>;
       using barycentric = math::vector<Scalar,3>;
+      using ray = ray<Scalar,Dimension>;
       using real = std::conditional_t<std::is_same<scalar, double>::value, double, float>;
 
       triangle() = default;
@@ -64,8 +66,6 @@ namespace owl
             return false;
         return true;
       }
-
-
 
       vector closest_point_barycentric(const vector& p) const
       {
@@ -176,6 +176,44 @@ namespace owl
         return {1-s-t, s, t};
       }
 
+      vector closest_point(const vector& p) const
+      {
+        return bary_2_cart(closest_point_barycentric(p));
+      }
+
+
+      std::optional<scalar> closest_intersection(const ray& r) const
+      {
+        vector tvec, pvec, qvec;
+
+        const vector& dir = r.direction();
+        vector e1 = v1 - v0;
+        vector e2 = v2 - v0;
+
+        pvec = cross(dir,e2);
+        scalar det = dot(e1, pvec);
+
+        scalar eps2 = 0;
+
+        if(det == 0)
+          return std::nullopt;
+
+        scalar inv_det = scalar{1}/det;
+        tvec = r.origin - v0;
+
+        scalar u = dot(tvec, pvec) * inv_det;
+        if(u < 0|| u > 1)
+          return std::nullopt;
+
+        qvec = cross(tvec, e1);
+
+        scalar v = dot(dir, qvec) * inv_det;
+        if(v < 0 || u+ v > 1)
+          return std::nullopt;
+
+        return dot(e2, qvec) * inv_det;
+      }
+
       bool operator==(const triangle& other) const
       {
         return vertices == other.vertices;
@@ -248,19 +286,7 @@ namespace owl
     };
 
 
-    template <typename Scalar, std::size_t Dimension>
-    vector<Scalar, Dimension> closest_point(const triangle<Scalar, Dimension>& tri, const vector<Scalar, Dimension>& p)
-    {
-      return tri.bary_2_cart(tri.closest_point_barycentric(p));
-    }
 
-    //returns the squared distance between point p and the triangle
-    template <typename Scalar, std::size_t Dimension>
-    Scalar sqr_distance(const triangle<Scalar, Dimension>& tri, const vector<Scalar, Dimension>& p)
-    {
-      auto  d = p - closest_point(tri, p);
-      return dot(d, d);
-    }
 
     template <typename Scalar, std::size_t Dimension>
     vector<Scalar,Dimension> reference_point(const triangle<Scalar,Dimension>& tri)

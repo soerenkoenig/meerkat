@@ -42,6 +42,19 @@ namespace owl
       {
         normalize();
       }
+
+
+      std::optional<Scalar> closest_intersection(const ray<Scalar, Dimension> r) const
+      {
+        Scalar denom = dot( normal(), r.direction());
+        if( denom == 0)
+          return std::nullopt;
+
+        Scalar t = (dot(normal(), r.origin) - distance());
+        if (t < 0)
+          return std::nullopt;
+        return t / denom;
+      }
     
       const vector& normal() const
       {
@@ -86,39 +99,23 @@ namespace owl
     using linef = line<float>;
     using lined = line<double>;
   
-     /*plane(const vector_type& point, const vector_type& normal)
-      {
-        auto it = std::copy(normal.begin(), normal.end(), data_.begin());
-        *it = -dot(normal, point);
-      
-        normalize();
-      }*/
+
   
-    template<typename T, std::size_t N>
-    nplane<T, N> nplane_from_point_and_normal(const vector<T, N>& point, const vector<T, N>& normal)
+    template<typename Scalar, std::size_t Dimension>
+    nplane<Scalar, Dimension> nplane_from_point_and_normal(const vector<Scalar, Dimension>& point,
+      const vector<Scalar, Dimension>& normal)
     {
-      vector<T, N + 1> coeffs;
+      vector<Scalar, Dimension + 1> coeffs;
       coeffs << normal, -dot(normal, point);
-      return nplane<T, N>(coeffs);
+      return nplane<Scalar, Dimension>(coeffs);
     }
     
-    template<typename T, std::size_t N>
-    T distance(const nplane<T, N>& pl, const vector<T, N>& pnt)
+    template<typename Scalar, std::size_t Dimension>
+    Scalar distance(const nplane<Scalar, Dimension>& pl, const vector<Scalar, Dimension>& pnt)
     {
       return dot(pl.normal(), pnt) - pl.distance();
     }
   
-    template<typename T, std::size_t N>
-    std::optional<T> intersect(const ray<T, N> r, const nplane<T, N>& pl)
-    {
-      T denom = dot( pl.normal(), r.direction());
-      if( denom == 0)
-        return std::nullopt;
-    
-      T t = distance(pl, r.origin) / denom;
-      if (t < 0)
-        return std::nullopt;
-      return t;
-    }
+
   }
 }

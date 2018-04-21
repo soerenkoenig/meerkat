@@ -89,7 +89,15 @@ namespace owl
           l0 = 1-l1;
         }
       }
-    
+
+      vector closest_point(const vector& q) const
+      {
+        Scalar l0,l1;
+        closest_point_barycentric(q,l0,l1);
+        return l0 * start + l1 * end;
+      };
+
+
       union
       {
         std::array<vector, 2> vertices;
@@ -102,20 +110,6 @@ namespace owl
     };
 
 
-    template <typename Scalar, std::size_t Dimension>
-    vector<Scalar,Dimension> closest_point(const line_segment<Scalar,Dimension>& l, vector<Scalar,Dimension> q)
-    {
-      Scalar l0,l1;
-      l.closest_point_barycentric(q,l0,l1);
-      return l0 * l.start + l1 * l.end ;
-    };
-
-    template <typename Scalar, std::size_t Dimension>
-    Scalar sqr_distance(const line_segment<Scalar,Dimension>& l, vector<Scalar,Dimension> q)
-    {
-      auto d = q - closest_point(l,q);
-      return dot(d,d);
-    };
 
 
     template <typename Scalar, std::size_t Dimension>

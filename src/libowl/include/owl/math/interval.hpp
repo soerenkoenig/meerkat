@@ -12,6 +12,8 @@
 
 #include "owl/math/matrix.hpp"
 #include "owl/math/primitive_traits.hpp"
+#include "owl/optional.hpp"
+#include "owl/math/ray.hpp"
 
 namespace owl
 {
@@ -172,8 +174,11 @@ namespace owl
       using scalar_type = Scalar;
       using bound_type = typename helper_type_::bound_type;
 
+      static constexpr bound_type largest = helper_type_::max();
+      static constexpr bound_type lowest = helper_type_::lowest();
+
       interval()
-        : bounds{{helper_type_::max(), helper_type_::lowest()}}
+        : bounds{{largest, lowest}}
       {
       }
 
@@ -199,7 +204,7 @@ namespace owl
 
       bool inside(const bound_type &p) const
       {
-        return helper_type_::template inside<LowerBoundOpen, UpperBoundOpen>(lower_bound, upper_bound, p);
+        return helper_type_::template inside<LowerBoundOpen, UpperBoundOpen>(this->lower_bound, upper_bound, p);
       }
 
       bool inside(const interval &other) const
@@ -209,8 +214,8 @@ namespace owl
 
       interval intersect(const interval &other) const
       {
-        return {helper_type_::maximum(lower_bound, other.lower_bound),
-                helper_type_::minimum(upper_bound, other.upper_bound)};
+        return {helper_type_::maximum(this->lower_bound, other.lower_bound),
+                helper_type_::minimum(this->upper_bound, other.upper_bound)};
       }
 
       auto center() const
@@ -378,11 +383,31 @@ namespace owl
         }
         return q;
       }
-      auto sqr_distance(const bound_type& q) const
+
+      std::optional<Scalar> closest_intersection(const ray<Scalar,Dimension>& r) const
       {
-        return math::sqr_distance(q, closest_point(q));
+
+
+        interval<Scalar> inter((lower_bound[0] - r.origin[0]) * r.inv_direction()[0],
+                               (upper_bound[0] - r.origin[0]) * r.inv_direction()[0]);
+        if (inter.lower_bound[0] > inter.upper_bound[0])
+          std::swap(inter.lower_bound[0], inter.upper_bound[0]);
+
+        for(std::size_t i = 0; i < Dimension; ++i)
+        {
+          interval<Scalar> inter_new((lower_bound[i] - r.origin[i]) * r.inv_direction()[i],
+                                     (upper_bound[i] - r.origin[i]) * r.inv_direction()[i]);
+
+          if (inter_new.lower_bound[i] > inter_new.upper_bound[i])
+            std::swap(inter_new.lower_bound[i], inter_new.upper_bound[i]);
+
+          inter = inter.intersect(inter_new);
+          if (inter.empty())
+            return std::nullopt;
+        }
+        return inter;
       }
-    
+
       union
       {
         std::array<bound_type, 2> bounds;
@@ -394,19 +419,6 @@ namespace owl
       };
     };
 
-    template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen, bool UpperBoundOpen>
-    auto sqr_distance(const interval<Scalar,Dimension,LowerBoundOpen,UpperBoundOpen>& inter,
-                      const typename interval<Scalar,Dimension,LowerBoundOpen,UpperBoundOpen>::bound_type& q)
-    {
-      return inter.sqr_distance(q);
-    }
-
-    template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen, bool UpperBoundOpen>
-    auto closest_point(const interval<Scalar,Dimension,LowerBoundOpen,UpperBoundOpen>& inter,
-                      const typename interval<Scalar,Dimension,LowerBoundOpen,UpperBoundOpen>::bound_type& q)
-    {
-      return inter.closest_point(q);
-    }
   
     template <typename ValueRange, bool LowerBoundOpen = false, bool UpperBoundOpen = true, typename = typename utils::is_iterable<ValueRange>::value>
     auto bounds(ValueRange&& values)
@@ -434,9 +446,18 @@ namespace owl
     
     template <typename Scalar, bool LowerBoundOpen = false, bool UpperBoundOpen = true>
     using rectangle = interval<Scalar, 2, LowerBoundOpen, UpperBoundOpen>;
-    
+
+    using rectanglef = rectangle<float>;
+    using rectangled = rectangle<double>;
+
     template <typename Scalar, bool LowerBoundOpen = false, bool UpperBoundOpen = true>
     using box = interval<Scalar, 3, LowerBoundOpen, UpperBoundOpen>;
+
+    using boxf = box<float>;
+    using boxd = box<double>;
+
+
+
   }
 }
 
