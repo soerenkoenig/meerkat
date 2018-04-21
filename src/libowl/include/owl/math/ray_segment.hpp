@@ -21,7 +21,7 @@ namespace owl
     {
     public:
       using scalar = Scalar;
-      using vector = vector<Scalar, Dimension>;
+      using vector = math::vector<Scalar, Dimension>;
       using interval = math::interval<Scalar>;
 
       ray_segment() = default;
