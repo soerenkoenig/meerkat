@@ -386,26 +386,28 @@ namespace owl
 
       std::optional<Scalar> closest_intersection(const ray<Scalar,Dimension>& r) const
       {
-
-
         interval<Scalar> inter((lower_bound[0] - r.origin[0]) * r.inv_direction()[0],
                                (upper_bound[0] - r.origin[0]) * r.inv_direction()[0]);
-        if (inter.lower_bound[0] > inter.upper_bound[0])
-          std::swap(inter.lower_bound[0], inter.upper_bound[0]);
+        if (inter.lower_bound > inter.upper_bound)
+          std::swap(inter.lower_bound, inter.upper_bound);
 
-        for(std::size_t i = 0; i < Dimension; ++i)
+        for(std::size_t i = 1; i < Dimension; ++i)
         {
           interval<Scalar> inter_new((lower_bound[i] - r.origin[i]) * r.inv_direction()[i],
                                      (upper_bound[i] - r.origin[i]) * r.inv_direction()[i]);
 
-          if (inter_new.lower_bound[i] > inter_new.upper_bound[i])
-            std::swap(inter_new.lower_bound[i], inter_new.upper_bound[i]);
+          if (inter_new.lower_bound > inter_new.upper_bound)
+            std::swap(inter_new.lower_bound, inter_new.upper_bound);
 
           inter = inter.intersect(inter_new);
           if (inter.empty())
             return std::nullopt;
         }
-        return inter;
+        if(inter.lower_bound >= 0)
+          return inter.lower_bound;
+        if(inter.upper_bound >= 0)
+          return inter.upper_bound;
+        return std::nullopt;
       }
 
       union

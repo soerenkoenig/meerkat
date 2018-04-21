@@ -31,7 +31,6 @@ namespace owl
       return v;
     };
 
-
     template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen = false, bool UpperBoundOpen = false>
     interval<Scalar,Dimension,LowerBoundOpen, UpperBoundOpen> bounds(const vector<Scalar, Dimension> &prim)
     {
@@ -672,12 +671,6 @@ namespace owl
    /* template<typename PrimitiveRange, typename Deref>
     knn_searcher(const PrimitiveRange &, Deref deref) -> knn_searcher<decltype(*std::begin(std::declval<PrimitiveRange>())),
       Deref>;*/
-
-
-
-
-
-
 
 
 

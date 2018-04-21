@@ -18,9 +18,8 @@ namespace owl
 {
   namespace math
   {
-
-
-    template <typename Primitive, typename Scalar = typename scalar_t<Primitive>::type,
+    template <typename Primitive,
+      typename Scalar = typename scalar_t<Primitive>::type,
       std::size_t Dimension = dimension_t<Primitive>::value>
     std::optional<Scalar> closest_intersection(const Primitive& prim, const ray<Scalar,Dimension>& r)
     {
