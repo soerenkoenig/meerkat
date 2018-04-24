@@ -1,8 +1,8 @@
-#include "owl/math/mesh.hpp"
-#include "owl/math/mesh_io.hpp"
-#include "owl/math/mesh_triangulation.hpp"
-#include "owl/math/mesh_primitives.hpp"
-#include "owl/math/physical_properties.hpp"
+#include "owl/math/geometry/mesh.hpp"
+#include "owl/math/geometry/mesh_io.hpp"
+#include "owl/math/geometry/mesh_triangulation.hpp"
+#include "owl/math/geometry/mesh_primitives.hpp"
+#include "owl/math/geometry/physical_properties.hpp"
 #include "owl/math/approx.hpp"
 #include "owl/utils/stop_watch.hpp"
 #include "catch/catch.hpp"
@@ -18,7 +18,7 @@ namespace test
 
   TEST_CASE( "add_face_s", "[math]" )
   {
-    using namespace owl::math;
+    using namespace owl::math::geometry;
     mesh<float> m;
     auto verts = m.add_vertices(7);
     auto f0 = m.add_face(verts[1], verts[2], verts[0]);
@@ -50,34 +50,34 @@ namespace test
 */
   TEST_CASE( "read raptor", "[math]" )
   {
-    using namespace owl::math;
+    using namespace owl::math::geometry;
     mesh<float> m;
-    owl::math::read(m, folder + "/178_raptor.off");
+    read(m, folder + "/178_raptor.off");
     CHECK(m.check() == 0);
   }
 
   TEST_CASE( "read horse", "[math]" )
   {
-    using namespace owl::math;
+    using namespace owl::math::geometry;
     mesh<float> m;
-    owl::math::read(m, folder + "/horse.off");
+    read(m, folder + "/horse.off");
 
     CHECK(m.check() == 0);
   }
 
   TEST_CASE( "add_face4", "[math]" )
   {
-    using namespace owl::math;
+    using namespace owl::math::geometry;
     mesh<float> m;
     owl::io::create_ply_cube_ascii("test.ply");
-    owl::math::read_ply(m,"test.ply");
+    read_ply(m,"test.ply");
     CHECK(m.num_faces() == 6);
     CHECK(m.check() == 0);
   }
 
   TEST_CASE( "add_face", "[math]" )
   {
-    using namespace owl::math;
+    using namespace owl::math::geometry;
     mesh<float> m;
     auto verts = m.add_vertices(9);
     auto f0 = m.add_face(verts[0], verts[1], verts[2]);
@@ -93,7 +93,7 @@ namespace test
 
   TEST_CASE( "add_face2", "[math]" )
   {
-    using namespace owl::math;
+    using namespace owl::math::geometry;
     mesh<float> m;
     auto verts = m.add_vertices(6);
     auto f0 = m.add_face(verts[0], verts[1], verts[2]);
@@ -108,7 +108,7 @@ namespace test
 
   TEST_CASE( "primitive create mesh", "[math]" )
   {
-    using namespace owl::math;
+    using namespace owl::math::geometry;
     physical_properties<float> prop;
 
 

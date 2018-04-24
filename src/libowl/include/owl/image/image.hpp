@@ -16,8 +16,8 @@
 #include "owl/utils/map_iterator.hpp"
 #include "owl/utils/range_algorithm.hpp"
 #include "owl/color/color.hpp"
-#include "owl/math/interval.hpp"
-#include "owl/math/triangle.hpp"
+#include "owl/math/geometry/interval.hpp"
+#include "owl/math/geometry/triangle.hpp"
 
 namespace owl
 {
@@ -231,14 +231,12 @@ namespace owl
                                                  [this](pixel_handle p){ return pixel_handle(p.index() + width_); });
       }
 
-      math::rectangle<std::size_t> region(std::size_t x, std::size_t y, std::size_t w, std::size_t h)
+      math::geometry::rectangle<std::size_t> region(std::size_t x, std::size_t y, std::size_t w, std::size_t h)
       {
-        return math::rectangle<std::size_t>(math::vector<std::size_t,2>(x,y), math::vector<std::size_t,2>(x+w,y+h));
+        return math::geometry::rectangle<std::size_t>(math::vector<std::size_t,2>(x,y), math::vector<std::size_t,2>(x+w,y+h));
       }
 
-
-
-      auto pixels(const math::rectangle<std::size_t>& region) const
+      auto pixels(const math::geometry::rectangle<std::size_t>& region) const
       {
         struct region_stepper
         {

@@ -1,8 +1,8 @@
-#include "owl/math/mesh.hpp"
-#include "owl/math/mesh_primitives.hpp"
-#include "owl/math/point_utils.hpp"
-#include "owl/math/triangle.hpp"
-#include "owl/math/aabb_tree.hpp"
+#include "owl/math/geometry/mesh.hpp"
+#include "owl/math/geometry/mesh_primitives.hpp"
+#include "owl/math/geometry/point_utils.hpp"
+#include "owl/math/geometry/triangle.hpp"
+#include "owl/math/geometry/aabb_tree.hpp"
 #include "catch/catch.hpp"
 
 
@@ -11,6 +11,7 @@ namespace test
   TEST_CASE( "aabb_tree", "[math]" )
   {
     using namespace owl::math;
+    using namespace owl::math::geometry;
     std::size_t n = 100000;
     std::vector<vector3f> points = random_points<float>(n);
     aabb_tree<vector3f> point_tree = make_aabb_tree(points);

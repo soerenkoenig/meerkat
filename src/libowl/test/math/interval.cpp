@@ -1,4 +1,4 @@
-#include "owl/math/interval.hpp"
+#include "owl/math/geometry/interval.hpp"
 #include "owl/math/approx.hpp"
 #include "catch/catch.hpp"
 
@@ -7,6 +7,7 @@ namespace test
   TEST_CASE( "interval", "[math]" )
   {
     using namespace owl::math;
+    using namespace owl::math::geometry;
 
     box<float> b;
     b.insert(vector3f(-1.0f,-1.0f,-1.0f));

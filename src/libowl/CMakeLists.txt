@@ -26,22 +26,22 @@ add_library(owl SHARED
         include/owl/math/angle.hpp
         include/owl/math/approx.hpp
         include/owl/math/constants.hpp
-        include/owl/math/euler_angles.hpp
-        include/owl/math/interval.hpp
-        include/owl/math/line_segment.hpp
+        include/owl/math/geometry/euler_angles.hpp
+        include/owl/math/geometry/interval.hpp
+        include/owl/math/geometry/line_segment.hpp
         include/owl/math/matrix.hpp
-        include/owl/math/mesh.hpp
-        include/owl/math/mesh_io.hpp
-        include/owl/math/mesh_primitives.hpp
-        include/owl/math/mesh_triangulation.hpp
-        include/owl/math/nplane.hpp
-        include/owl/math/physical_properties.hpp
-        include/owl/math/quaternion.hpp
-        include/owl/math/ray.hpp
-        include/owl/math/trafos.hpp
-        include/owl/math/triangle.hpp
+        include/owl/math/geometry/mesh.hpp
+        include/owl/math/geometry/mesh_io.hpp
+        include/owl/math/geometry/mesh_primitives.hpp
+        include/owl/math/geometry/mesh_triangulation.hpp
+        include/owl/math/geometry/nplane.hpp
+        include/owl/math/geometry/physical_properties.hpp
+        include/owl/math/geometry/quaternion.hpp
+        include/owl/math/geometry/ray.hpp
+        include/owl/math/geometry/trafos.hpp
+        include/owl/math/geometry/triangle.hpp
         include/owl/math/utils.hpp
-        include/owl/math/point_utils.hpp
+        include/owl/math/geometry/point_utils.hpp
         include/owl/utils/adjacent_iterator.hpp
         include/owl/utils/base64.hpp
         include/owl/utils/binary_serialization.hpp
@@ -69,11 +69,11 @@ add_library(owl SHARED
         include/owl/export.hpp
         include/owl/optional.hpp
         include/owl/variant.hpp
-        include/owl/math/aabb_tree.hpp
-        include/owl/math/primitive_traits.hpp
-        include/owl/math/distance.hpp
-        include/owl/math/ray_segment.hpp
-        include/owl/math/intersection.hpp)
+        include/owl/math/geometry/aabb_tree.hpp
+        include/owl/math/geometry/primitive_traits.hpp
+        include/owl/math/geometry/distance.hpp
+        include/owl/math/geometry/ray_segment.hpp
+        include/owl/math/geometry/intersection.hpp)
 
 target_include_directories(owl PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

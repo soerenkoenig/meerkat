@@ -8,8 +8,8 @@
 //
 
 #include "owl/math/matrix.hpp"
-#include "owl/math/trafos.hpp"
-#include "owl/math/euler_angles.hpp"
+#include "owl/math/geometry/trafos.hpp"
+#include "owl/math/geometry/euler_angles.hpp"
 #include "owl/math/approx.hpp"
 #include "catch/catch.hpp"
 
@@ -87,6 +87,7 @@ namespace test
   TEST_CASE( "matrix", "[math]" )
   {
     using namespace owl::math;
+    using namespace owl::math::geometry;
     auto tr = translate<float>(vector3f(0,0,0),vector3f(1,2,3));
     CHECK(approx(tr * vector4f(0,0,0,1)) == vector4f(1,2,3,1));
     CHECK(approx(rotate_x<float,3>(degrees<float>(0))) == matrix33f::identity());

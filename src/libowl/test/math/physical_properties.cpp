@@ -1,4 +1,4 @@
-#include "owl/math/physical_properties.hpp"
+#include "owl/math/geometry/physical_properties.hpp"
 #include "owl/math/approx.hpp"
 #include "catch/catch.hpp"
 
@@ -9,6 +9,7 @@ namespace test
   TEST_CASE( "physical_properties", "[math]" )
   {
     using namespace owl::math;
+    using namespace owl::math::geometry;
     physical_properties<float> prop;
 
     prop.add_quad(

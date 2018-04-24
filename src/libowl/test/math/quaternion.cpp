@@ -1,5 +1,5 @@
-#include "owl/math/quaternion.hpp"
-#include "owl/math/trafos.hpp"
+#include "owl/math/geometry/quaternion.hpp"
+#include "owl/math/geometry/trafos.hpp"
 #include "owl/math/approx.hpp"
 #include "catch/catch.hpp"
 
@@ -9,6 +9,8 @@ namespace test
   TEST_CASE( "quaternion", "[math]" )
   {
     using namespace owl::math;
+    using namespace owl::math::geometry;
+
     matrix33f R = rotate_x<float,3>(degrees<float>(30));
     quaternionf q = R;
     matrix33f R2 = q;
