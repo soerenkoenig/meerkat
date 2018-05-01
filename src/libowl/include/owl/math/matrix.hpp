@@ -25,6 +25,7 @@
 #include "owl/utils/step_iterator.hpp"
 #include "owl/utils/container_utils.hpp"
 #include "owl/utils/random_utils.hpp"
+#include "owl/utils/hash_utils.hpp"
 #include "owl/math/approx.hpp"
 
 namespace owl
@@ -338,6 +339,12 @@ namespace owl
     {
       static_assert(sizeof...(Args) == 0 || sizeof...(Args) + 1 == size(), "incorrect number of arguments");
     }
+
+    template<typename Scalar2>
+    explicit matrix(const matrix<Scalar2, Rows, Cols>& other)
+    {
+      std::transform(other.begin(), other.end(), data_.begin(),[](const Scalar2& v){ return static_cast<Scalar>(v); });
+    }
     
     matrix& operator=(const matrix& other) = default;
     
@@ -597,7 +604,7 @@ namespace owl
       return *this;
     }
 
-    matrix operator/(const Scalar& s)
+    matrix operator/(const Scalar& s) const
     {
       auto ans = *this;
       ans /= s;
@@ -1321,9 +1328,9 @@ namespace owl
   
     template <typename T, std::size_t M, std::size_t N,
       typename Engine = std::mt19937, typename Distribution = std::normal_distribution<T>>
-    matrix<T, M, N> random_matrix(Engine& engine)
+    matrix<T, M, N> random_matrix(Engine& engine = owl::utils::create_seeded_engine<Engine>())
     {
-      auto generator = std::bind(Distribution(), owl::utils::create_seeded_engine<Engine>());
+      auto generator = std::bind(Distribution(), engine);
       matrix<T, M, N> m;
       std::generate(m.begin(), m.end(), generator);
       return m;
@@ -1416,6 +1423,18 @@ namespace owl
       return frustrum(l, r, b, t, znear, zfar);
     }
   }
+}
+namespace std
+{
+  template<typename Scalar, std::size_t Rows, std::size_t Cols>
+  struct hash<owl::math::matrix<Scalar, Rows, Cols>>
+  {
+    std::size_t operator()(const owl::math::matrix<Scalar,Rows,Cols>& mat) const
+    {
+      return owl::utils::hash_value(mat.begin(), mat.end());
+    }
+  };
+
 }
 
 

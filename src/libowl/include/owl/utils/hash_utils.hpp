@@ -34,7 +34,7 @@ namespace owl
       seed ^= hash_value(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
     
-    //returns hash value for a range of values using HashCombine
+    //returns hash value for a range of values using hash_combine
     template<typename Iterator>
     std::size_t hash_value(Iterator first, Iterator last, std::size_t seed = 0)
     {
@@ -61,7 +61,7 @@ namespace std
     static bool hash_impl(std::tuple<Args...>& tuple, std::index_sequence<Is...>)
     {
       std::size_t seed = 0;
-      (hash_combine(seed, std::get<Is>(tuple)), ...);
+      (owl::utils::hash_combine(seed, std::get<Is>(tuple)), ...);
       return seed;
     }
   };

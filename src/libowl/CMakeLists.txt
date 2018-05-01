@@ -73,7 +73,7 @@ add_library(owl SHARED
         include/owl/math/geometry/primitive_traits.hpp
         include/owl/math/geometry/distance.hpp
         include/owl/math/geometry/ray_segment.hpp
-        include/owl/math/geometry/intersection.hpp)
+        include/owl/math/geometry/intersection.hpp include/owl/math/geometry/camera_intrinsics.hpp include/owl/math/geometry/dense_tsdf_volume.hpp)
 
 target_include_directories(owl PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -126,7 +126,7 @@ add_executable(testowl
         test/math/physical_properties.cpp
         test/math/aabb_tree.cpp
         test/math/distance.cpp
-        test/math/intersection.cpp)
+        test/math/intersection.cpp test/math/dense_tsdf_volume.cpp)
 
 target_link_libraries(testowl
         owl)

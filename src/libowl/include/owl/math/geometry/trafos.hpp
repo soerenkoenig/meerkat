@@ -20,10 +20,9 @@ namespace owl
     namespace geometry
     {
       template<typename S,typename T>
-      square_matrix<S,4> perspective(const T& fovy, const T&aspect, const T& znear, const T& zfar)
+      square_matrix<S,4> perspective(const angle<T>& fovy, const T&aspect, const T& znear, const T& zfar)
       {
-        S fovyr = (S)(fovy*3.14159 / 180.0);
-        S f = (S)(cos(fovyr/2.0f) / sin(fovyr / 2.0f));
+        S f = (S)(cos(fovy.radians()/2.0f) / sin(fovy.radians() / 2.0f));
         square_matrix<S,4> m;
         m << f / aspect,  0,                         0,                            0,
                       0,  f,                         0,                            0,

@@ -225,8 +225,8 @@ namespace owl
 
         void insert(const interval &inter)
         {
-          insert(lower_bound);
-          insert(upper_bound);
+          insert(inter.lower_bound);
+          insert(inter.upper_bound);
         }
 
         //ensures p is inside the interval
