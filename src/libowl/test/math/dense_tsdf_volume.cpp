@@ -15,12 +15,10 @@ namespace test
 {
   TEST_CASE("dense_tsdf_volume", "[math]")
   {
-
     using namespace owl::math;
     using namespace owl::math::geometry;
 
-    dense_tsdf_volume<float> volume(1,12,0.1,false);
-
-    std::cout << volume.normal({0.5,0.5,0.5}) << std::endl;
+    dense_tsdf_volume<float> volume(1, 12, 0.1f, false);
+    std::cout << volume.normal({0.5, 0.5, 0.5}) << std::endl;
   }
 }

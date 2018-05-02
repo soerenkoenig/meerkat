@@ -58,7 +58,7 @@ namespace owl
         vector normal(const vector &p) const
         {
           vector n;
-          const scalar half_gap = 0.99 * voxel_length_;
+          const scalar half_gap = scalar(0.99) * voxel_length_;
           for (int i = 0; i < 3; i++)
           {
             vector p0 = p;
@@ -82,7 +82,7 @@ namespace owl
         scalar tdsf(const vector &p) const
         {
           index idx;
-          vector p_grid = p / voxel_length_ - vector(0.5, 0.5, 0.5);
+          vector p_grid = p / voxel_length_ - vector::constant(scalar{0.5});
           for (int i = 0; i < 3; i++)
           {
             idx(i) = static_cast<int>(std::floor(p_grid(i)));
@@ -122,8 +122,8 @@ namespace owl
         bool with_color_;
         math::vector<scalar, 3> origin_;
         double length_;
-        int resolution_;
-        int voxel_num_;
+        std::size_t resolution_;
+        std::size_t voxel_num_;
         std::vector<Scalar> tsdf_;
         std::vector<color> color_;
         std::vector<float> weight_;
