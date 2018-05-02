@@ -209,6 +209,11 @@ namespace owl
     {
       return matrix{owl::utils::make_array<size()>(detail::eye<Scalar,Rows>)};
     }
+
+    static constexpr matrix constant(const Scalar& s)
+    {
+      return one() * s;
+    }
     
     iterator begin() { return data_.begin(); }
     iterator end() { return data_.end(); }
@@ -1406,22 +1411,7 @@ namespace owl
       }
     }
   
-    template <typename T>
-    matrix<T,4,4> projection_matrix_from_intrinsics(const matrix<T, 3, 3>& K, int img_width, int img_height, T znear, T zfar)
-    {
-      T fx = K(0, 0);
-      T fy = K(1, 1);
-      T skew = K(0, 1);
-      assert(skew == 1); //not rectangular pixel case is not supported
-      T u0 = K(0, 2);
-      T v0 = K(1, 2);
-      
-      T l = -znear * u0 / fx;
-      T r = znear  * (img_width - u0) / fx;
-      T b = -znear * v0 / fy;
-      T t = znear  *(img_height - v0) / fy;
-      return frustrum(l, r, b, t, znear, zfar);
-    }
+
   }
 }
 namespace std

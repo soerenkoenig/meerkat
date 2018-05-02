@@ -123,6 +123,8 @@ namespace test
     CHECK(approx(mat2).margin(0.000001) == R2);
     auto RX = rotate_x<float,3>(degrees<float>(30));
 
+    std::cout << matrix33f::constant(3)<<std::endl;
+
 
     CHECK(vector3f(1,2,3).max_abs_element_index() == 2);
     CHECK(vector3f(1,-4,3).max_abs_element_index() == 1);
