@@ -8,7 +8,8 @@
 //
 
 #pragma once
-#include "owl/math/matrix.hpp"
+#include "owl/math/geometry/point.hpp"
+#include "owl/math/geometry/interval.hpp"
 
 namespace owl
 {
@@ -154,6 +155,25 @@ namespace owl
       {
         using type = math::vector<Scalar, Dimension>;
       };
+
+      template<typename T>
+      struct point_t
+      {
+        using type = typename T::point;
+      };
+
+      template<typename Scalar, std::size_t Dimension>
+      struct point_t<math::vector<Scalar, Dimension>>
+      {
+        using type = point<Scalar, Dimension>;
+      };
+      template<typename Scalar, std::size_t Dimension>
+      struct point_t<point<Scalar, Dimension>>
+      {
+        using type = point<Scalar, Dimension>;
+      };
+
+
     }
   }
 }

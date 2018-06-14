@@ -10,6 +10,6 @@ namespace test
     using namespace owl::math::geometry;
 
     ray3f r1(vector3f(0,0,0),vector3f(1,1,1));
-    CHECK(r1(2) == vector3f(2,2,2));
+    CHECK(r1(2) == point3f(2.0f,2.0f,2.0f));
   }
 }

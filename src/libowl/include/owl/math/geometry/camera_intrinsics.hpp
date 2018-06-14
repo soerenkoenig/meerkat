@@ -26,7 +26,9 @@ namespace owl
       {
       public:
         using scalar = Scalar;
-        using interval = interval<float>;
+        using interval = interval<Scalar>;
+        using point2 = point<Scalar,2>;
+        using point3 = point<Scalar,3>;
 
         camera_intrinsics() = default;
 
@@ -51,7 +53,7 @@ namespace owl
           return std::make_pair(fx(), fy());
         }
 
-        math::vector<Scalar,2> principal_point() const
+        point2 principal_point() const
         {
           return {cx(), cy()};
         }

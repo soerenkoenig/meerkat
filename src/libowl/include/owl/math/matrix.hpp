@@ -40,11 +40,6 @@ namespace owl
         return i == N ? (T)1 : 0;
       }
 
-      template <typename T, T value>
-      constexpr T filled(std::size_t)
-      {
-        return value;
-      }
   
       template <typename T>
       constexpr T zero(std::size_t)
@@ -1324,12 +1319,7 @@ namespace owl
         r(i, i) = v(i);
       return r;
     }
-  
-    template <typename T, typename S, typename = std::enable_if_t<std::is_convertible<S, double>::value> >
-    auto lerp(T start, T end, S alpha)
-    {
-      return start + (end-start) * alpha;
-    }
+
   
     template <typename T, std::size_t M, std::size_t N,
       typename Engine = std::mt19937, typename Distribution = std::normal_distribution<T>>
@@ -1355,18 +1345,7 @@ namespace owl
       return random_matrix<T, M, 1, Engine, Distribution>(engine);
     }
 
-    template <typename Scalar, std::size_t Dimension>
-    Scalar sqr_distance(const vector<Scalar,Dimension>& a, const vector<Scalar,Dimension>& b)
-    {
-      auto v = a-b;
-      return v.sqr_length();
-    }
 
-    template <typename Scalar, std::size_t Dimension>
-    Scalar distance(const vector<Scalar,Dimension>& a, const vector<Scalar,Dimension>& b)
-    {
-      return std::sqrt(sqr_distance(a,b));
-    }
   
     template <typename Scalar>
     std::array<std::size_t, 2> min_abs_components(const vector3<Scalar>& nml)

@@ -26,15 +26,15 @@ namespace owl
     {
     public:
     
-      using vector_type = std::conditional_t<HasAlpha, math::vector<T, N + 1>, math::vector<T, N>>;
+      using vector = std::conditional_t<HasAlpha, math::vector<T, N + 1>, math::vector<T, N>>;
       using value_type = T;
       using reference = T&;
       using pointer = T*;
       using const_reference = const T&;
       using const_pointer = const T*;
-      using size_type = typename vector_type::size_type;
-      using iterator = typename vector_type::iterator;
-      using const_iterator = typename vector_type::const_iterator;
+      using size_type = typename vector::size_type;
+      using iterator = typename vector::iterator;
+      using const_iterator = typename vector::const_iterator;
     
       static constexpr std::size_t num_channels() { return  HasAlpha ? N + 1 : N; }
     
@@ -49,8 +49,8 @@ namespace owl
       {
       }
     
-      explicit color(vector_type&& other)
-        : channels_{std::forward<vector_type>(other)}
+      explicit color(vector&& other)
+        : channels_{std::forward<vector>(other)}
       {
       }
     
@@ -60,24 +60,24 @@ namespace owl
       {
       }
     
-      color& operator=(vector_type&& other)
+      color& operator=(vector&& other)
       {
-        channels_ = std::forward<vector_type>(other);
+        channels_ = std::forward<vector>(other);
         return *this;
       }
     
-      color& operator=(const vector_type& other)
+      color& operator=(const vector& other)
       {
         channels_ = other;
         return *this;
       }
     
-      explicit operator const vector_type&() const
+      explicit operator const vector&() const
       {
         return channels_;
       }
     
-      explicit operator vector_type&()
+      explicit operator vector&()
       {
         return channels_;
       }
@@ -230,7 +230,7 @@ namespace owl
         return *this;
       }
     
-      template <typename Scalar, typename = typename vector_type::template enable_if_scalar_t<Scalar> >
+      template <typename Scalar, typename = typename vector::template enable_if_scalar_t<Scalar> >
       auto operator*(Scalar s) const
       {
         return Derived<decltype(std::declval<T>() * std::declval<Scalar>()), HasAlpha>(channels_ * s);
@@ -249,7 +249,7 @@ namespace owl
       }
     
     private:
-      vector_type channels_;
+      vector channels_;
     };
   
     template <typename Scalar,typename T, std::size_t N, bool HasAlpha, template <typename, bool> typename Derived, typename = typename math::vector<T,N>::template enable_if_scalar_t<Scalar> >
@@ -261,7 +261,7 @@ namespace owl
     template <typename T, std::size_t N, bool HasAlpha, template <typename, bool> typename Derived>
     std::ostream& operator<<(std::ostream& out, const color<T, N, HasAlpha, Derived>& col)
     {
-      return out << static_cast<const typename color<T, N, HasAlpha, Derived>::vector_type&>(col);
+      return out << static_cast<const typename color<T, N, HasAlpha, Derived>::vector&>(col);
     }
   
   

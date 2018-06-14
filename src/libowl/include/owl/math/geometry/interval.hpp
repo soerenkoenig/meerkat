@@ -10,10 +10,10 @@
 
 #pragma once
 
-#include "owl/math/matrix.hpp"
-#include "primitive_traits.hpp"
+#include "owl/math/geometry/point.hpp"
+#include "owl/math/geometry/primitive_traits.hpp"
 #include "owl/optional.hpp"
-#include "ray.hpp"
+#include "owl/math/geometry/ray.hpp"
 
 namespace owl
 {
@@ -28,7 +28,7 @@ namespace owl
         struct interval_helper
         {
           using scalar_type = Scalar;
-          using bound_type = vector<Scalar, Dimension>;
+          using bound_type = point<Scalar, Dimension>;
 
           static constexpr bound_type max()
           {
@@ -171,7 +171,7 @@ namespace owl
         using helper_type_ = typename detail::interval_helper<Scalar, Dimension>;
 
       public:
-        using scalar_type = Scalar;
+        using scalar = Scalar;
         using bound_type = typename helper_type_::bound_type;
 
         static constexpr bound_type largest = helper_type_::max();
@@ -220,7 +220,7 @@ namespace owl
 
         auto center() const
         {
-          return (lower_bound + upper_bound) / 2;
+          return lower_bound + extents() / 2;
         }
 
         void insert(const interval &inter)
@@ -357,7 +357,7 @@ namespace owl
         {
 
           auto c = center();
-          decltype(c) one;
+          decltype(extents()) one;
           if constexpr(Dimension == 1)
             one = 1;
           else
@@ -418,6 +418,18 @@ namespace owl
             bound_type upper_bound;
           };
         };
+      };
+
+      template<typename Scalar, std::size_t Dimension, bool LowerBoundOpen, bool UpperBoundOpen>
+      struct point_t<interval<Scalar, Dimension, LowerBoundOpen, UpperBoundOpen>>
+      {
+        using type = typename interval<Scalar, Dimension, LowerBoundOpen, UpperBoundOpen>::bound_type;
+      };
+
+      template<typename Scalar, std::size_t Dimension, bool LowerBoundOpen, bool UpperBoundOpen>
+      struct scalar_t<interval<Scalar, Dimension, LowerBoundOpen, UpperBoundOpen>>
+      {
+        using type = typename interval<Scalar, Dimension, LowerBoundOpen, UpperBoundOpen>::scalar;
       };
 
 

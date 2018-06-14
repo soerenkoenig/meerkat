@@ -37,7 +37,16 @@ namespace owl
     {
       return x > 0 && !(x & (x - 1));
     }
-  
+
+    template <typename Value, typename Scalar>
+    inline auto lerp(Value v0, Value v1, Scalar t)
+    {
+      return v0 + t * (v1 - v0);
+    };
+
+
+
+
   }
 }
 

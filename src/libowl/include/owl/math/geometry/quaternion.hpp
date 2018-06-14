@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "owl/math/matrix.hpp"
-#include "euler_angles.hpp"
+#include "owl/math/geometry/point.hpp"
+#include "owl/math/geometry/euler_angles.hpp"
 #include "owl/math/angle.hpp"
 
 namespace owl
@@ -20,6 +20,17 @@ namespace owl
     namespace geometry
     {
       template<typename Scalar>
+      struct axis_angle
+      {
+        using scalar = Scalar;
+        using angle = angle<Scalar>;
+        using vector = vector<Scalar, 3>;
+
+        vector axis;
+        angle theta;
+      };
+
+      template<typename Scalar>
       class quaternion
       {
       public:
@@ -28,8 +39,10 @@ namespace owl
         using matrix44 = square_matrix<Scalar, 4>;
         using vector3 = vector<Scalar, 3>;
         using vector4 = vector<Scalar, 4>;
+        using point = point<Scalar,3>;
         using angle = angle<Scalar>;
         using euler_angles = euler_angles<Scalar>;
+        using axis_angle = axis_angle<Scalar>;
 
         quaternion()
           : data_{0, 0, 0, 1}
@@ -38,6 +51,11 @@ namespace owl
 
         quaternion(const scalar &x, const scalar &y, const scalar &z, const scalar &w)
           : data_{x, y, z, w}
+        {
+        }
+
+        quaternion(const point& position)
+          : data_{position.x(), position.y(), position.z(), 0}
         {
         }
 
@@ -56,9 +74,24 @@ namespace owl
           *this = other;
         }
 
-        quaternion(const vector3 &axis, const angle &theta)
+        quaternion(const axis_angle& rotation)
         {
-          set_from_axis_angle(axis, theta);
+          scalar factor = sin(rotation.theta / 2);
+          imag() = factor * rotation.axis;
+          real() = cos(rotation.theta / 2);
+          normalize();
+        }
+
+        static quaternion identity()
+        {
+          return {0, 0, 0, 1};
+        }
+
+        vector3 rotate(const point& p) const
+        {
+          return 2 * dot(imag(),p.as_vector()) * imag()
+                 + (real() * real() - imag().sqr_length())
+                   * p.as_vector() + 2 * real() * cross(imag(),p.as_vector());
         }
 
         quaternion &operator=(const euler_angles &other)
@@ -170,6 +203,13 @@ namespace owl
         }
 
         quaternion inverse() const
+        {
+          auto qinv = conjugate();
+          qinv.normalize();
+          return qinv;
+        }
+
+        quaternion conjugate() const
         {
           return quaternion(-x(), -y(), -z(), w());
         }
@@ -342,13 +382,7 @@ namespace owl
           data_[3] = w;
         }
 
-        void set_from_axis_angle(const vector3 &axis, const angle &theta)
-        {
-          scalar factor = sin(theta / 2);
-          imag() = factor * axis;
-          real() = cos(theta / 2);
-          normalize();
-        }
+
 
       private:
         vector4 data_;

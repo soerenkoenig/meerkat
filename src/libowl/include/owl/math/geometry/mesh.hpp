@@ -25,6 +25,7 @@
 #include "owl/math/matrix.hpp"
 #include "owl/math/angle.hpp"
 #include "owl/math/geometry/interval.hpp"
+#include "owl/math/geometry/point.hpp"
 #include "owl/math/constants.hpp"
 #include "owl/color/color.hpp"
 #include "owl/math/geometry/line_segment.hpp"
@@ -128,10 +129,10 @@ namespace owl
         using scalar = Scalar;
         using angle = angle<scalar>;
 
-        template<std::size_t Dim>
-        using vector = vector<Scalar, Dim>;
-        using vector3 = vector<3>;
-        using vector2 = vector<2>;
+        using vector = vector<Scalar, 3>;
+        using point = point<Scalar, 3>;
+        using point2 = geometry::point<Scalar, 2>;
+
         using box = box<Scalar>;
         using line_segment_t = line_segment<Scalar, 3>;
         using triangle_t = triangle<Scalar, 3>;
@@ -149,8 +150,14 @@ namespace owl
         template<typename Range>
         using is_face_handle_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, face_handle>;
 
-        template<typename Range, std::size_t N = 3>
-        using is_vector_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, vector<N>>;
+        template<typename Range>
+        using is_point_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, point>;
+
+        template<typename Range>
+        using is_point2_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, point2>;
+
+        template<typename Range>
+        using is_vector_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, vector>;
 
         mesh()
         {
@@ -312,33 +319,33 @@ namespace owl
                                make_handle_circulator_range(inner(f), step, deref));
         }
 
-        const vector3 &position(vertex_handle v) const
+        const point &position(vertex_handle v) const
         {
           return vertex_properties_[vertex_position_handle_][v.index()];
         }
 
-        vector3 &position(vertex_handle v)
+        point &position(vertex_handle v)
         {
           return vertex_properties_[vertex_position_handle_][v.index()];
         }
 
 
-        const vector2 &texcoord(halfedge_handle he) const
+        const point2 &texcoord(halfedge_handle he) const
         {
           return halfedge_properties_[halfedge_texcoord_handle_][he.index()];
         }
 
-        vector2 &texcoord(halfedge_handle he)
+        point2 &texcoord(halfedge_handle he)
         {
           return halfedge_properties_[halfedge_texcoord_handle_][he.index()];
         }
 
-        const vector3 &normal(face_handle f) const
+        const vector &normal(face_handle f) const
         {
           return face_properties_[face_normal_handle_][f.index()];
         }
 
-        vector3 &normal(face_handle f)
+        vector &normal(face_handle f)
         {
           return face_properties_[face_normal_handle_][f.index()];
         }
@@ -353,12 +360,12 @@ namespace owl
           return face_properties_[face_color_handle_][f.index()];
         }
 
-        const vector3 &normal(halfedge_handle he) const
+        const vector &normal(halfedge_handle he) const
         {
           return halfedge_properties_[halfedge_normal_handle_][he.index()];
         }
 
-        vector3 &normal(halfedge_handle he)
+        vector &normal(halfedge_handle he)
         {
           return halfedge_properties_[halfedge_normal_handle_][he.index()];
         }
@@ -631,7 +638,7 @@ namespace owl
           return angle >= max_angle;
         }
 
-        vector3 direction(halfedge_handle he) const
+        vector direction(halfedge_handle he) const
         {
           return position(target(he)) - position(origin(he));
         }
@@ -646,7 +653,7 @@ namespace owl
           return length(halfedge(e));
         }
 
-        edge_handle split(edge_handle e, const vector3 &position)
+        edge_handle split(edge_handle e, const point &position)
         {
           return edge(split(halfedge(e), position));
         }
@@ -656,7 +663,7 @@ namespace owl
           return edge(split(halfedge(e), v));
         }
 
-        halfedge_handle split(halfedge_handle he, const vector3 &position)
+        halfedge_handle split(halfedge_handle he, const point &position)
         {
           auto v = add_vertex(position);
           return split(he, v);
@@ -826,25 +833,25 @@ namespace owl
           return he;
         }
 
-        void split(face_handle f, const vector3 &pos)
+        void split(face_handle f, const point &pos)
         {
           split(f, add_vertex(pos));
         }
 
-        vector3 centroid(halfedge_handle he) const
+        point centroid(halfedge_handle he) const
         {
-          return (position(target(he)) + position(origin(he))) / 2;
+          return lerp(position(target(he)), position(origin(he)), scalar(0.5));
         }
 
-        vector3 centroid(edge_handle e) const
+        point centroid(edge_handle e) const
         {
           return centroid(halfedge(e));
         }
 
-        vector3 centroid(face_handle f) const
+        point centroid(face_handle f) const
         {
           auto points = positions(vertices(f));
-          vector3 mp = vector3::zero();
+          point mp = point::origin();
           std::size_t n = 0;
           for (auto p : points)
           {
@@ -902,7 +909,7 @@ namespace owl
           cos_a = std::clamp(cos_a, -1, 1);
           if (is_boundary(he))
           {
-            vector3 f_n(compute_loop_normal(opposite(he)));
+            vector f_n(compute_loop_normal(opposite(he)));
             scalar sign_a = dot(cross(v0, v1), f_n);
             return radians<Scalar>(sign_a >= 0 ? acos(cos_a) : -acos(cos_a));
           } else
@@ -919,7 +926,7 @@ namespace owl
           if (is_boundary(e))
             return radians<scalar>(0);
 
-          vector3 n0, n1;
+          vector n0, n1;
           halfedge_handle he = halfedge(e);
           n0 = compute_sector_normal(he);
           n1 = compute_sector_normal(opposite(he));
@@ -933,7 +940,7 @@ namespace owl
           return radians<scalar>(da_sin_sign >= 0 ? acos(da_cos) : -acos(da_cos));
         }
 
-        vector3 compute_sector_normal(halfedge_handle he, bool normalize = true) const
+        vector compute_sector_normal(halfedge_handle he, bool normalize = true) const
         {
           auto nml = cross(direction(next(he)), direction(opposite(he)));
           if (normalize)
@@ -941,9 +948,9 @@ namespace owl
           return nml;
         }
 
-        vector3 compute_loop_normal(halfedge_handle he, bool normalize = true) const
+        vector compute_loop_normal(halfedge_handle he, bool normalize = true) const
         {
-          auto nml = vector3::zero();
+          auto nml = vector::zero();
 
           for (auto he : halfedges(he))
             nml += compute_sector_normal(he, false);
@@ -954,14 +961,14 @@ namespace owl
           return nml;
         }
 
-        vector3 compute_face_normal(face_handle f) const
+        vector compute_face_normal(face_handle f) const
         {
           return compute_loop_normal(inner(f));
         }
 
-        vector3 compute_vertex_normal(vertex_handle v) const
+        vector compute_vertex_normal(vertex_handle v) const
         {
-          auto nml = vector3::zero();
+          auto nml = vector::zero();
           if (v.index() == 217)
             return nml;
           for (auto he : incoming_halfedges(v))
@@ -1082,7 +1089,7 @@ namespace owl
           return vertex_properties_.add_elem();
         }
 
-        auto add_vertex(const vector3 &pos)
+        auto add_vertex(const point &pos)
         {
           auto v = add_vertex();
           position(v) = pos;
@@ -1095,8 +1102,8 @@ namespace owl
           return vertex_properties_.add_elems(n);
         }
 
-        template<typename VectorRange, typename = std::enable_if_t<is_vector_range<VectorRange>::value>>
-        auto add_vertices(VectorRange &&points)
+        template<typename PointRange, typename = std::enable_if_t<is_point_range<PointRange>::value>>
+        auto add_vertices(PointRange &&points)
         {
           auto n = std::size(points);
           vertices_.resize(num_vertices() + n);
@@ -1326,13 +1333,13 @@ namespace owl
                 move(*i, *first++);
         }
 
-        template<typename TexCoordRange, typename = std::enable_if_t<is_vector_range<TexCoordRange, 2>::value>>
+        template<typename TexCoordRange, typename = std::enable_if_t<is_point2_range<TexCoordRange>::value>>
         void set_face_texcoords(face_handle f, TexCoordRange &&texcoords)
         {
           owl::utils::copy(texcoords, this->texcoords(inner_halfedges(f)).begin());
         }
 
-        template<typename NormalRange, typename = std::enable_if_t<is_vector_range<NormalRange, 3>::value>>
+        template<typename NormalRange, typename = std::enable_if_t<is_vector_range<NormalRange>::value>>
         void set_face_normals(face_handle f, NormalRange &&normals)
         {
           owl::utils::copy(normals, this->normals(halfedges(f)).begin());
@@ -1861,11 +1868,11 @@ namespace owl
         std::vector<vertex_t> vertices_;
         std::vector<face_t> faces_;
 
-        vertex_property_handle<vector3> vertex_position_handle_;
-        face_property_handle<vector3> face_normal_handle_;
+        vertex_property_handle<point> vertex_position_handle_;
+        face_property_handle<vector> face_normal_handle_;
         face_property_handle<color_t> face_color_handle_;
-        halfedge_property_handle<vector3> halfedge_normal_handle_;
-        halfedge_property_handle<vector2> halfedge_texcoord_handle_;
+        halfedge_property_handle<vector> halfedge_normal_handle_;
+        halfedge_property_handle<point2> halfedge_texcoord_handle_;
 
         utils::indexed_property_container<vertex_tag> vertex_properties_;
         utils::indexed_property_container<edge_tag> edge_properties_;
@@ -1953,7 +1960,7 @@ namespace owl
       void transform(mesh<Scalar> &mesh, const matrix<Scalar, 4, 4> &point_trafo,
         bool auto_normalize = true)
       {
-        transform(mesh, point_trafo, transpose(invert(point_trafo)), auto_normalize);
+        rigid_transform(mesh, point_trafo, transpose(invert(point_trafo)), auto_normalize);
       }
 
 
@@ -1966,7 +1973,7 @@ namespace owl
           1, 0, 0, 0,
           0, 0, 0, 1;
 
-        transform(mesh, m, false);
+        rigid_transform(mesh, m, false);
       }
 
       template<typename Scalar>

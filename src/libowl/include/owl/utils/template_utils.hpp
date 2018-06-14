@@ -83,7 +83,7 @@ namespace owl
       : std::integral_constant<bool, std::is_same<T, First>::value
         || is_one_of<T, Rest...>::value>
     {};
-  
+
     template <typename T, typename = void>
     struct is_iterable : std::false_type
     {};
@@ -92,6 +92,15 @@ namespace owl
     struct is_iterable<T, std::void_t<decltype(std::declval<T>().begin()), decltype(std::declval<T>().end())>>
       : std::true_type
     {};
+
+    template<class Dereferencable>
+    struct pointee
+    {
+      using type = std::remove_reference_t<decltype(*std::declval<Dereferencable>())>;
+    };
+
+    template<typename A, typename B>
+    using enable_if_convertible_t = std::enable_if_t<std::is_convertible_v<A, B>>;
 
 
 

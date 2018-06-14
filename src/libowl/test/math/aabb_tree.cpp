@@ -8,16 +8,17 @@
 
 namespace test
 {
+  /*
   TEST_CASE( "aabb_tree", "[math]" )
   {
     using namespace owl::math;
     using namespace owl::math::geometry;
     std::size_t n = 100000;
-    std::vector<vector3f> points = random_points<float>(n);
-    aabb_tree<vector3f> point_tree = make_aabb_tree(points);
+    std::vector<point3f> points = random_points<float>(n);
+    aabb_tree<point3f> point_tree = make_aabb_tree(points);
     CHECK(point_tree.num_leaf_nodes() + point_tree.num_split_nodes() == point_tree.num_nodes());
 
-    knn_searcher<vector3f> searcher(points);
+    knn_searcher<point3f> searcher(points);
 
     vector3f q(1, 2, 3);
     std::random_device rd;
@@ -45,18 +46,18 @@ namespace test
     auto closest_vertices = searcher2.closest_k_primitives(4, vector3f(10, 0, 0));
 
     for (const auto &v : closest_vertices)
-      std::cout << v.primitive << " " << v.distance() << " " << transpose(m.position(v.primitive)) << std::endl;
+      std::cout << v.primitive << " " << v.distance() << " " << m.position(v.primitive) << std::endl;
 
     auto result = searcher2.query_ball(vector3f(1, 0, 0), 1);
 
 
-    std::vector<vector2f> points2 = {{1, 2}, {4, 5}};
+    std::vector<point2f> points2 = {{1, 2}, {4, 5}};
 
-    knn_searcher<vector2f> searcher3(points2);
+    knn_searcher<point2f> searcher3(points2);
 
     //search closest point in points2
     auto result3 = searcher3.closest_primitive({1, 3});
-    CHECK(result3->primitive == vector2f{1, 2});
+    CHECK(result3->primitive == point2f{1, 2});
     CHECK(result3->distance() == 1);
 
     std::vector<std::size_t> indices = {0, 1};
@@ -87,4 +88,5 @@ namespace test
 
 
   }
+   */
 }

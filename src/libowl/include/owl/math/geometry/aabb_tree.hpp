@@ -15,10 +15,10 @@
 #include <limits>
 
 #include "owl/optional.hpp"
-#include "interval.hpp"
-#include "primitive_traits.hpp"
-#include "point_utils.hpp"
-#include "distance.hpp"
+#include "owl/math/geometry/interval.hpp"
+#include "owl/math/geometry/primitive_traits.hpp"
+#include "owl/math/geometry/point_utils.hpp"
+#include "owl/math/geometry/distance.hpp"
 
 
 namespace owl
@@ -28,13 +28,13 @@ namespace owl
     namespace geometry
     {
       template<typename Scalar, std::size_t Dimension>
-      vector<Scalar, Dimension> reference_point(const vector<Scalar, Dimension> &v)
+      point<Scalar, Dimension> reference_point(const point<Scalar, Dimension> &v)
       {
         return v;
       };
 
       template<typename Scalar, std::size_t Dimension, bool LowerBoundOpen = false, bool UpperBoundOpen = false>
-      interval<Scalar, Dimension, LowerBoundOpen, UpperBoundOpen> bounds(const vector<Scalar, Dimension> &prim)
+      interval<Scalar, Dimension, LowerBoundOpen, UpperBoundOpen> bounds(const point<Scalar, Dimension> &prim)
       {
         return {prim};
       }
@@ -54,15 +54,18 @@ namespace owl
 
       template<typename Primitive,
         typename Deref = detail::default_deref,
-        typename Vector = typename vector_t<decltype(std::declval<Deref>()(std::declval<Primitive>()))>::type,
-        typename Scalar = typename scalar_t<Vector>::type>
+        typename Point = typename point_t<decltype(std::declval<Deref>()(std::declval<Primitive>()))>::type,
+        typename Scalar = typename scalar_t<Point>::type>
       class aabb_tree
       {
       public:
-        using vector = Vector;
-        static constexpr std::size_t dimension = dimension_t<vector>::value;
+
         using scalar = Scalar;
+        static constexpr std::size_t dimension = dimension_t<Point>::value;
         using aabb = interval<scalar, dimension, false, false>;
+        using point = Point;
+        using vector = vector<Scalar,dimension>;
+
 
 
         //abstract base class defining the common interface of all aabb tree node
@@ -443,14 +446,15 @@ namespace owl
 
       template<typename Primitive,
         typename Deref = detail::default_deref,
-        typename Vector = typename vector_t<decltype(std::declval<Deref>()(std::declval<Primitive>()))>::type,
-        typename Scalar = typename scalar_t<Vector>::type>
+        typename Point = typename point_t<decltype(std::declval<Deref>()(std::declval<Primitive>()))>::type,
+        typename Scalar = typename scalar_t<Point>::type>
       class knn_searcher
       {
       public:
-        using aabb_tree =  aabb_tree<Primitive, Deref, Vector, Scalar>;
+        using aabb_tree =  aabb_tree<Primitive, Deref, Point, Scalar>;
         using scalar =  typename aabb_tree::scalar;
         using vector = typename aabb_tree::vector;
+        using point = typename aabb_tree::point;
         using aabb_node = typename aabb_tree::aabb_node;
         using aabb_split_node = typename aabb_tree::aabb_split_node;
         using aabb_leaf_node = typename aabb_tree::aabb_leaf_node;
@@ -506,16 +510,14 @@ namespace owl
 
 
         template<typename PrimitiveRange>
-        knn_searcher(
-          const PrimitiveRange &primitives, Deref
-        deref = {})
+        knn_searcher(const PrimitiveRange &primitives, Deref deref = {})
           : tree_(deref)
         {
           tree_.build(std::begin(primitives), std::end(primitives));
         }
 
 
-        std::vector<result_entry> closest_k_primitives(std::size_t k, const vector &q) const
+        std::vector<result_entry> closest_k_primitives(std::size_t k, const point &q) const
         {
           if (!tree_.root())
             return std::vector<result_entry>();
@@ -574,7 +576,7 @@ namespace owl
           return result;
         }
 
-        std::optional<result_entry> closest_primitive(const vector &q) const
+        std::optional<result_entry> closest_primitive(const point &q) const
         {
           if (!tree_.root())
             return std::nullopt;
@@ -620,7 +622,7 @@ namespace owl
           return best;
         }
 
-        std::vector<Primitive> query_ball(const vector &q, scalar radius) const
+        std::vector<Primitive> query_ball(const point &q, scalar radius) const
         {
           std::vector<Primitive> result;
           if (tree_.root())
@@ -642,7 +644,7 @@ namespace owl
               const aabb_leaf_node *leaf = static_cast<const aabb_leaf_node *>(entry.node);
               for (const auto &prim : leaf->primitives())
               {
-                scalar dist = math::sqr_distance(tree_.primitive(prim), q);
+                scalar dist = geometry::sqr_distance(tree_.primitive(prim), q);
                 if (dist <= r2)
                   result.push_back(prim);
               }

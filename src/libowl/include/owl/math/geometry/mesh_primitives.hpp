@@ -33,67 +33,67 @@ namespace owl
       template<typename Scalar>
       mesh <Scalar> create_box()
       {
-        std::array<math::vector<Scalar, 3>, 8> positions = {{math::vector<Scalar, 3>{0, 0, 0},
-                                                              math::vector<Scalar, 3>{1, 0, 0},
-                                                              math::vector<Scalar, 3>{0, 1, 0},
-                                                              math::vector<Scalar, 3>{1, 1, 0},
-                                                              math::vector<Scalar, 3>{0, 0, 1},
-                                                              math::vector<Scalar, 3>{1, 0, 1},
-                                                              math::vector<Scalar, 3>{0, 1, 1},
-                                                              math::vector<Scalar, 3>{1, 1, 1}}};
+        std::array<point<Scalar, 3>, 8> positions = {{{0, 0, 0},
+                                                              {1, 0, 0},
+                                                              {0, 1, 0},
+                                                              {1, 1, 0},
+                                                              {0, 0, 1},
+                                                              {1, 0, 1},
+                                                              {0, 1, 1},
+                                                              {1, 1, 1}}};
         mesh<float> m;
         auto vertices = m.add_vertices(positions);
 
-        std::array<math::vector<Scalar, 2>, 4> texcoord_right =
+        std::array<point<Scalar, 2>, 4> texcoord_right =
           {{
-             math::vector<Scalar, 2>{0.5, 0.25},
-             math::vector<Scalar, 2>{0.5, 0.5},
-             math::vector<Scalar, 2>{0.75, 0.5},
-             math::vector<Scalar, 2>{0.75, 0.25}
+             {0.5, 0.25},
+             {0.5, 0.5},
+             {0.75, 0.5},
+             {0.75, 0.25}
            }};
         m.set_face_texcoords(m.add_face(vertices[1], vertices[3], vertices[7], vertices[5]), texcoord_right);
 
-        std::array<math::vector<Scalar, 2>, 4> texcoord_left =
+        std::array<point<Scalar, 2>, 4> texcoord_left =
           {{
-             math::vector<Scalar, 2>{0, 0.5},
-             math::vector<Scalar, 2>{0.25, 0.5},
-             math::vector<Scalar, 2>{0.25, 0.25},
-             math::vector<Scalar, 2>{0, 0.25}
+             {0, 0.5},
+             {0.25, 0.5},
+             {0.25, 0.25},
+             {0, 0.25}
            }};
         m.set_face_texcoords(m.add_face(vertices[0], vertices[4], vertices[6], vertices[2]), texcoord_left);
-        std::array<math::vector<Scalar, 2>, 4> texcoord_top =
+        std::array<point<Scalar, 2>, 4> texcoord_top =
           {{
-             math::vector<Scalar, 2>{0.25, 0.0},
-             math::vector<Scalar, 2>{0.25, 0.25},
-             math::vector<Scalar, 2>{0.5, 0.25},
-             math::vector<Scalar, 2>{0.5, 0.0}
+             {0.25, 0.0},
+             {0.25, 0.25},
+             {0.5, 0.25},
+             {0.5, 0.0}
            }};
         m.set_face_texcoords(m.add_face(vertices[2], vertices[6], vertices[7], vertices[3]), texcoord_top);
 
-        std::array<math::vector<Scalar, 2>, 4> texcoord_bottom =
+        std::array<point<Scalar, 2>, 4> texcoord_bottom =
           {{
-             math::vector<Scalar, 2>{0.25, 0.75},
-             math::vector<Scalar, 2>{0.5, 0.75},
-             math::vector<Scalar, 2>{0.5, 0.5},
-             math::vector<Scalar, 2>{0.25, 0.5}
+             {0.25, 0.75},
+             {0.5, 0.75},
+             {0.5, 0.5},
+             {0.25, 0.5}
            }};
         m.set_face_texcoords(m.add_face(vertices[0], vertices[1], vertices[5], vertices[4]), texcoord_bottom);
 
-        std::array<math::vector<Scalar, 2>, 4> texcoord_front =
+        std::array<point<Scalar, 2>, 4> texcoord_front =
           {{
-             math::vector<Scalar, 2>{0.25, 0.5},
-             math::vector<Scalar, 2>{0.5, 0.5},
-             math::vector<Scalar, 2>{0.5, 0.25},
-             math::vector<Scalar, 2>{0.25, 0.25}
+             {0.25, 0.5},
+             {0.5, 0.5},
+             {0.5, 0.25},
+             {0.25, 0.25}
            }};
         m.set_face_texcoords(m.add_face(vertices[4], vertices[5], vertices[7], vertices[6]), texcoord_front);
 
-        std::array<math::vector<Scalar, 2>, 4> texcoord_back =
+        std::array<point<Scalar, 2>, 4> texcoord_back =
           {{
-             math::vector<Scalar, 2>{1, 0.5},
-             math::vector<Scalar, 2>{1.0, 0.25},
-             math::vector<Scalar, 2>{0.75, 0.25},
-             math::vector<Scalar, 2>{0.75, 0.5}
+             {1, 0.5},
+             {1.0, 0.25},
+             {0.75, 0.25},
+             {0.75, 0.5}
            }};
         m.set_face_texcoords(m.add_face(vertices[0], vertices[2], vertices[3], vertices[1]), texcoord_back);
         m.update_normals(radians<Scalar>(0));
@@ -103,10 +103,10 @@ namespace owl
       template<typename Scalar>
       mesh <Scalar> create_tetradedron()
       {
-        std::array<math::vector<Scalar, 3>, 4> positions = {{math::vector<Scalar, 3>{0, 0, 0},
-                                                              math::vector<Scalar, 3>{1, 0, 0},
-                                                              math::vector<Scalar, 3>{0, 1, 0},
-                                                              math::vector<Scalar, 3>{0, 0, 1}}};
+        std::array<point<Scalar, 3>, 4> positions = {{{0, 0, 0},
+                                                       {1, 0, 0},
+                                                              {0, 1, 0},
+                                                              {0, 0, 1}}};
 
         mesh<float> m;
         auto vertices = m.add_vertices(positions);
@@ -128,15 +128,15 @@ namespace owl
         Scalar h = (Scalar) cos(2.0 * asin(a / (2.0 * radius))) * radius;
         Scalar r2 = (Scalar) sqrt(radius * radius - h * h);
 
-        std::array<vector<Scalar, 3>, 12> points;
+        std::array<point<Scalar, 3>, 12> points;
         int k = 0;
-        points[k++] = vector<Scalar, 3>(0, radius, 0);
+        points[k++] = point<Scalar, 3>(0, radius, 0);
         for (int i = 0; i < 5; i++)
-          points[k++] = vector<Scalar, 3>(cos(i * degrees<Scalar>(72)) * r2, h, -sin(i * degrees<Scalar>(72)) * r2);
+          points[k++] = point<Scalar, 3>(cos(i * degrees<Scalar>(72)) * r2, h, -sin(i * degrees<Scalar>(72)) * r2);
         for (int i = 0; i < 5; i++)
-          points[k++] = vector<Scalar, 3>(cos(degrees<Scalar>(36) + i * degrees<Scalar>(72)) * r2, -h,
+          points[k++] = point<Scalar, 3>(cos(degrees<Scalar>(36) + i * degrees<Scalar>(72)) * r2, -h,
                                           -sin(degrees<Scalar>(36) + i * degrees<Scalar>(72)) * r2);
-        points[k] = vector<Scalar, 3>(0, -radius, 0);
+        points[k] = point<Scalar, 3>(0, -radius, 0);
 
         auto vhandles = m.add_vertices(points);
 
@@ -156,10 +156,10 @@ namespace owl
       {
         mesh<Scalar> m;
 
-        std::array<vector3<Scalar>, 3> positions =
-          {vector3<Scalar>{0, 0, 0},
-           vector3<Scalar>{1, 0, 0},
-           vector3<Scalar>{(Scalar) 0.5, (Scalar) 1, 0}};
+        std::array<point<Scalar,3>, 3> positions =
+          {{0, 0, 0},
+           {1, 0, 0},
+           {(Scalar) 0.5, (Scalar) 1, 0}};
 
         auto vhandles = m.add_vertices(positions);
         m.add_face(vhandles[0], vhandles[1], vhandles[2]);
@@ -178,7 +178,7 @@ namespace owl
           auto verts = m.vertices();
 
           for (auto &pos: m.positions(make_iterator_range(verts).advance_begin(n_old)))
-            pos = radius * normalize(pos);
+            pos = radius * normalize(pos.as_vector());
         }
         m.update_normals();
         return m;
@@ -193,7 +193,7 @@ namespace owl
         mesh<Scalar> m;
 
         std::size_t n = slices * (stacks - 1) + 2;
-        std::vector<vector<Scalar, 3>> positions;
+        std::vector<point<Scalar, 3>> positions;
         positions.reserve(n);
 
         positions.emplace_back(0, radius, 0);
@@ -237,7 +237,7 @@ namespace owl
         for (auto v: m.vertices())
         {
           for (auto &nml : m.normals(m.incoming_halfedges(v)))
-            nml = normalize(m.position(v));
+            nml = normalize(m.position(v).as_vector());
         }
 
         return m;
@@ -251,7 +251,7 @@ namespace owl
         mesh<Scalar> m;
 
         std::size_t n = 2 + slices * (stacks + 1);
-        std::vector<vector<Scalar, 3> > positions;
+        std::vector<point<Scalar, 3> > positions;
         positions.reserve(n);
 
         positions.emplace_back(0, height, 0);
@@ -298,7 +298,7 @@ namespace owl
         mesh<Scalar> m;
 
         std::size_t n = rings * nsides;
-        std::vector<vector<Scalar, 3>> positions;
+        std::vector<point<Scalar, 3>> positions;
         positions.reserve(n);
         std::size_t k = 0;
         for (std::size_t i = 0; i < rings; ++i)
@@ -337,7 +337,7 @@ namespace owl
       mesh <Scalar> create_disk(Scalar2 radius, std::size_t slices)
       {
         mesh<Scalar> m;
-        std::vector<vector<Scalar, 3>> positions;
+        std::vector<point<Scalar, 3>> positions;
         positions.reserve(slices + 1);
         positions.emplace_back(0, 0, 0);
 
@@ -360,7 +360,7 @@ namespace owl
       {
         mesh<Scalar> m;
 
-        std::vector<vector<Scalar, 3>> positions;
+        std::vector<point<Scalar, 3>> positions;
         positions.reserve(6);
 
         positions.emplace_back(0, radius, 0);

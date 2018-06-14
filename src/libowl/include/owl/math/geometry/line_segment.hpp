@@ -9,7 +9,7 @@
 
 #pragma once
 #include "owl/optional.hpp"
-#include "owl/math/matrix.hpp"
+#include "owl/math/geometry/point.hpp"
 #include "ray.hpp"
 #include "interval.hpp"
 
@@ -24,11 +24,12 @@ namespace owl
       {
       public:
         using scalar = Scalar;
-        using vector = math::vector<Scalar, Dimension>;
+        using vector = vector<Scalar, Dimension>;
+        using point = point<Scalar, Dimension>;
 
         line_segment() = default;
 
-        line_segment(const vector& start, const vector& end)
+        line_segment(const point& start, const point& end)
           : vertices{start, end}
         {
         }
@@ -64,7 +65,7 @@ namespace owl
         }
 
 
-        void closest_point_barycentric(const vector& p, scalar& l0, scalar& l1) const
+        void closest_point_barycentric(const point& p, scalar& l0, scalar& l1) const
         {
           vector edge0 = end - start;
           vector d0 = p - start;
@@ -91,7 +92,7 @@ namespace owl
           }
         }
 
-        vector closest_point(const vector& q) const
+        point closest_point(const point& q) const
         {
           Scalar l0,l1;
           closest_point_barycentric(q,l0,l1);
@@ -101,19 +102,19 @@ namespace owl
 
         union
         {
-          std::array<vector, 2> vertices;
+          std::array<point, 2> vertices;
           struct
           {
-            vector start;
-            vector end;
+            point start;
+            point end;
           };
         };
       };
 
       template <typename Scalar, std::size_t Dimension>
-      math::vector<Scalar,Dimension> reference_point(const line_segment<Scalar,Dimension>& l)
+      point<Scalar,Dimension> reference_point(const line_segment<Scalar,Dimension>& l)
       {
-        return (l.start + l.end) / Scalar(2);
+        return l.start + (l.end - l.start) / Scalar(2);
       }
 
       template <typename Scalar, std::size_t Dimension, bool LowerBoundOpen = false, bool UpperBoundOpen = false>

@@ -41,7 +41,7 @@ namespace owl
 
       template<typename Primitive, typename Scalar = typename scalar_t<Primitive>::type,
         std::size_t Dimension = dimension_t<Primitive>::value>
-      std::optional<vector<Scalar, Dimension>>
+      std::optional<point<Scalar, Dimension>>
       closest_intersection_point(const Primitive &prim, const ray<Scalar, Dimension> &r)
       {
         auto t = closest_intersection(prim, r);
@@ -52,7 +52,7 @@ namespace owl
 
       template<typename Primitive, typename Scalar = typename scalar_t<Primitive>::type,
         std::size_t Dimension = dimension_t<Primitive>::value>
-      std::optional<vector<Scalar, Dimension>>
+      std::optional<point<Scalar, Dimension>>
       closest_intersection_point(const Primitive &prim, const ray_segment<Scalar, Dimension> &rs)
       {
         auto t = closest_intersection(prim, rs);

@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "owl/math/matrix.hpp"
+#include "owl/math/geometry/point.hpp"
 #include "owl/math/angle.hpp"
 #include "owl/math/geometry/interval.hpp"
 
@@ -110,7 +110,7 @@ namespace owl
       }
 
       template <typename T>
-      square_matrix<T,4> translate(const vector<T, 3>& source, const vector<T,3>& dest)
+      square_matrix<T,4> translate(const point<T, 3>& source, const point<T,3>& dest)
       {
         return translate<T>(dest - source);
       }

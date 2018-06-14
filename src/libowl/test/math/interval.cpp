@@ -10,10 +10,10 @@ namespace test
     using namespace owl::math::geometry;
 
     box<float> b;
-    b.insert(vector3f(-1.0f,-1.0f,-1.0f));
-    b.insert(vector3f(1,1,1));
+    b.insert(point3f(-1.0f,-1.0f,-1.0f));
+    b.insert(point3f(1,1,1));
     auto x = b.extents().max_element_index();
-    CHECK(b.inside(vector3f(0,0,0)));
+    CHECK(b.inside(point3f(0,0,0)));
     interval<int,1,false,true> i1(0,1);
     interval<int,1,false,true> i2(1,2);
     auto i3 = i1.intersect(i2);

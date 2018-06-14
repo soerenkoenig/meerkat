@@ -8,7 +8,7 @@
 //
 
 #pragma once
-#include "owl/math/matrix.hpp"
+#include "owl/math/geometry/point.hpp"
 
 namespace owl
 {
@@ -24,10 +24,11 @@ namespace owl
 
         using scalar = Scalar;
         using vector = vector<Scalar, Dimension>;
+        using point = point<Scalar,Dimension>;
 
         ray() = default;
 
-        ray(const vector &origin, const vector &direction)
+        ray(const point &origin, const vector &direction)
           : origin(origin)
         {
           set_direction(direction);
@@ -40,7 +41,7 @@ namespace owl
           inv_direction_ = comp_div(vector::one(), direction);
         }
 
-        vector operator()(const scalar &t) const
+        point operator()(const scalar &t) const
         {
           return origin + direction_ * t;
         }
@@ -55,7 +56,7 @@ namespace owl
           return inv_direction_;
         }
 
-        vector origin;
+        point origin;
 
       private:
         vector inv_direction_;

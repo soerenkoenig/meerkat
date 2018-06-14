@@ -11,7 +11,7 @@
 
 #include <vector>
 
-#include "owl/math/matrix.hpp"
+#include "owl/math/geometry/point.hpp"
 #include "owl/color/color.hpp"
 
 namespace owl
@@ -25,7 +25,8 @@ namespace owl
       {
       public:
         using scalar = Scalar;
-        using vector = math::vector<scalar, 3>;
+        using vector = math::vector<Scalar, 3>;
+        using point = point<Scalar,3>;
         using index = math::vector<std::int32_t, 3>;
         using color = color::rgb32f;
 
@@ -55,7 +56,7 @@ namespace owl
                   half_voxel_length_ + voxel_length_ * voxel_index.z()};
         }
 
-        vector normal(const vector &p) const
+        vector normal(const point &p) const
         {
           vector n;
           const scalar half_gap = scalar(0.99) * voxel_length_;

@@ -8,7 +8,7 @@
 //
 
 #pragma once
-#include "owl/math/matrix.hpp"
+#include "owl/math/geometry/point.hpp"
 
 namespace owl
 {
@@ -16,27 +16,27 @@ namespace owl
   {
     namespace geometry
     {
-      template<typename Scalar, std::size_t Dimension>
-      const vector <Scalar, Dimension> &
-      closest_point(const vector <Scalar, Dimension> &prim, const vector <Scalar, Dimension> &)
-      {
-        return prim;
-      };
 
-      template<typename Primitive, typename Point>
-      auto closest_point(const Primitive &prim, const Point &p)
+      template<typename Primitive>
+      auto closest_point(const Primitive &prim, const typename point_t<Primitive>::type &p)
       {
         return prim.closest_point(p);
       };
 
-      template<typename Primitive, typename Point>
-      auto sqr_distance(const Primitive &prim, const Point &p)
+      template<typename Scalar,std::size_t Dimension>
+      Scalar sqr_distance(const point<Scalar,Dimension> &p1, const point<Scalar,Dimension> &p2)
       {
-        return sqr_distance(prim.closest_point(p), p);
+        return (p1 - p2).sqr_length();
       };
 
-      template<typename Primitive, typename Point>
-      auto distance(const Primitive &prim, const Point &p)
+      template<typename Primitive>
+      typename scalar_t<Primitive>::type sqr_distance(const Primitive &prim, const typename point_t<Primitive>::type &p)
+      {
+        return sqr_distance(closest_point<Primitive>(prim,p), p);
+      };
+
+      template<typename Primitive>
+      auto distance(const Primitive &prim, const typename point_t<Primitive>::type &p)
       {
         return std::sqrt(sqr_distance(prim, p));
       };

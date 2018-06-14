@@ -3,6 +3,7 @@
 #include "owl/color/color_names.hpp"
 #include "owl/color/gamma_correction.hpp"
 #include "owl/math/approx.hpp"
+#include "owl/math/utils.hpp"
 #include "catch/catch.hpp"
 
 

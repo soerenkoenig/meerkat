@@ -9,7 +9,7 @@
 
 #pragma once
 #include "owl/optional.hpp"
-#include "owl/math/matrix.hpp"
+#include "owl/math/geometry/point.hpp"
 #include "ray.hpp"
 
 namespace owl
@@ -24,6 +24,7 @@ namespace owl
       public:
         using scalar = Scalar;
         using vector = vector<Scalar, Dimension>;
+        using point = point<Scalar, Dimension>;
         using homog_vector = math::vector<Scalar, Dimension + 1>;
 
         template<typename S1>
@@ -102,11 +103,11 @@ namespace owl
 
 
       template<typename Scalar, std::size_t Dimension>
-      nplane<Scalar, Dimension> nplane_from_point_and_normal(const vector<Scalar, Dimension> &point,
+      nplane<Scalar, Dimension> nplane_from_point_and_normal(const point<Scalar, Dimension> &p,
         const vector<Scalar, Dimension> &normal)
       {
         vector<Scalar, Dimension + 1> coeffs;
-        coeffs << normal, -dot(normal, point);
+        coeffs << normal, -dot<Scalar,Dimension,1>(normal, p);
         return nplane<Scalar, Dimension>(coeffs);
       }
 
