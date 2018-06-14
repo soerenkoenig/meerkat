@@ -73,7 +73,7 @@ add_library(owl SHARED
         include/owl/math/geometry/primitive_traits.hpp
         include/owl/math/geometry/distance.hpp
         include/owl/math/geometry/ray_segment.hpp
-        include/owl/math/geometry/intersection.hpp include/owl/math/geometry/camera_intrinsics.hpp include/owl/math/geometry/dense_tsdf_volume.hpp include/owl/math/geometry/rigid_transform.hpp include/owl/math/geometry/point.hpp include/owl/math/statistics.hpp include/owl/math/hamming.hpp include/owl/utils/indirect_iterator.hpp)
+        include/owl/math/geometry/intersection.hpp include/owl/math/geometry/camera_intrinsics.hpp include/owl/math/geometry/dense_tsdf_volume.hpp include/owl/math/geometry/rigid_transform.hpp include/owl/math/geometry/point.hpp include/owl/math/statistics.hpp include/owl/math/hamming.hpp include/owl/utils/indirect_iterator.hpp include/owl/math/dual_number.hpp)
 
 target_include_directories(owl PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

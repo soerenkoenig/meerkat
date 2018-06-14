@@ -1320,6 +1320,55 @@ namespace owl
       return r;
     }
 
+    /*
+
+      template<typename Scalar, std::size_t Rows, std::size_t Columns, typename Engine = std::mt19937>
+  matrix <Scalar, Rows, Columns> random_uniform_matrix(Scalar lo = Scalar(0),
+    Scalar hi = std::is_floating_point_v<Scalar> ? Scalar(1) : std::numeric_limits<Scalar>::max(),
+    Engine &engine = thread_local_seeded_engine<Engine>())
+  {
+    matrix<Scalar, Rows, Columns> ans;
+    if constexpr(std::is_floating_point_v<Scalar>)
+    {
+      std::uniform_real_distribution<Scalar> dist(lo, hi);
+      std::generate(ans.begin(), ans.end(), [&]()
+      { return dist(engine); });
+    } else
+    {
+      std::uniform_int_distribution<Scalar> dist(lo, hi);
+      std::generate(ans.begin(), ans.end(), [&]()
+      { return dist(engine); });
+    }
+
+    return ans;
+  }
+
+  template<typename Scalar, std::size_t Rows, std::size_t Columns, typename Engine = std::mt19937>
+  matrix <Scalar, Rows, Columns> random_normal_matrix(Scalar mu = 0, Scalar sigma = Scalar{1},
+    Engine &engine = thread_local_seeded_engine<Engine>())
+  {
+    matrix<Scalar, Rows, Columns> ans;
+    std::normal_distribution<Scalar> dist(mu, sigma);
+    std::generate(ans.begin(), ans.end(), [&]()
+    { return dist(engine); });
+    return ans;
+  }
+
+  template<typename Scalar, std::size_t N, typename Engine = std::mt19937>
+  vector <Scalar, N> random_uniform_vector(Scalar lo = Scalar(0),
+    Scalar hi = std::is_floating_point_v<Scalar> ? Scalar(1) : std::numeric_limits<Scalar>::max(),
+    Engine &engine = thread_local_seeded_engine<Engine>())
+  {
+    return random_uniform_matrix<Scalar, 1, N>(lo, hi, engine);
+  }
+
+  template<typename Scalar, std::size_t N, typename Engine = std::mt19937>
+  vector <Scalar, N> random_normal_vector(Scalar mu = Scalar(0), Scalar sigma = Scalar(1),
+    Engine &engine = thread_local_seeded_engine<Engine>())
+  {
+    return random_normal_matrix<Scalar, 1, N>(mu, sigma, engine);
+  }
+     */
   
     template <typename T, std::size_t M, std::size_t N,
       typename Engine = std::mt19937, typename Distribution = std::normal_distribution<T>>

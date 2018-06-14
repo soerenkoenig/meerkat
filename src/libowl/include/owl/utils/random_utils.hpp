@@ -25,5 +25,12 @@ namespace owl
       std::seed_seq seeds(std::begin(random_data), std::end(random_data));
       return Engine(seeds);
     }
+
+    template<typename Engine = std::mt19937>
+    Engine &thread_local_seeded_engine()
+    {
+      static thread_local Engine engine = create_seeded_engine<Engine>();
+      return engine;
+    }
   }
 }
