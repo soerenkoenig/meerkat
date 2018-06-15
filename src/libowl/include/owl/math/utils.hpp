@@ -41,11 +41,8 @@ namespace owl
     template <typename Value, typename Scalar>
     inline auto lerp(Value v0, Value v1, Scalar t)
     {
-      return v0 + t * (v1 - v0);
+      return v0 +  (v1 - v0) * t;
     };
-
-
-
 
   }
 }

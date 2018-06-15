@@ -126,7 +126,7 @@ add_executable(testowl
         test/math/physical_properties.cpp
         test/math/aabb_tree.cpp
         test/math/distance.cpp
-        test/math/intersection.cpp test/math/dense_tsdf_volume.cpp test/math/camera_intrinsics.cpp test/math/rigid_transform.cpp test/math/statistics.cpp test/math/hamming.cpp)
+        test/math/intersection.cpp test/math/dense_tsdf_volume.cpp test/math/camera_intrinsics.cpp test/math/rigid_transform.cpp test/math/statistics.cpp test/math/hamming.cpp test/utils/indirect_iterator.cpp)
 
 target_link_libraries(testowl
         owl)

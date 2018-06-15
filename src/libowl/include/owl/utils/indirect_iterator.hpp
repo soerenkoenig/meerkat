@@ -33,7 +33,7 @@ namespace owl
         std::remove_cv_t<Value>>;
 
       using reference = std::conditional_t<std::is_same_v<Reference, use_default>,
-        decltype(*std::declval<Iterator>()), Reference>;
+        std::add_lvalue_reference_t<value_type>, Reference>;
 
       using pointer = std::conditional_t<std::is_same_v<Value, use_default>,
         value_type *, Value *>;
@@ -75,10 +75,100 @@ namespace owl
         return *this;
       }
 
+      template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category, std::bidirectional_iterator_tag>,
+        std::enable_if_t<Cond, int> = 0>
       indirect_iterator &operator--()
       {
         --iterator_;
         return *this;
+      }
+
+      indirect_iterator operator++(int)
+      {
+        auto tmp = *this;
+        operator++();
+        return tmp;
+      }
+
+      template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category, std::bidirectional_iterator_tag>,
+        std::enable_if_t<Cond, int> = 0>
+      indirect_iterator operator--(int)
+      {
+        auto tmp = *this;
+        operator--();
+        return tmp;
+      }
+
+      template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category, std::random_access_iterator_tag>,
+        std::enable_if_t<Cond, int> = 0>
+      indirect_iterator& operator+=(difference_type n)
+      {
+        std::advance(iterator_, n);
+        return *this;
+      }
+
+      template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category,std::random_access_iterator_tag>,
+        std::enable_if_t<Cond, int> = 0>
+      indirect_iterator& operator-=(difference_type n)
+      {
+        std::advance(iterator_, - n);
+        return *this;
+      }
+
+      template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category,std::random_access_iterator_tag>,
+        std::enable_if_t<Cond, int> = 0>
+      indirect_iterator operator+(difference_type n) const
+      {
+        auto it = *this;
+        it += n;
+        return it;
+      }
+
+      template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category,std::random_access_iterator_tag>,
+        std::enable_if_t<Cond, int> = 0>
+      indirect_iterator operator-(difference_type n) const
+      {
+        auto it = *this;
+        it -= n;
+        return it;
+      }
+
+      bool operator==(const indirect_iterator& other) const
+      {
+        return iterator_ == other.iterator_;
+      }
+
+      bool operator!=(const indirect_iterator& other) const
+      {
+        return iterator_ != other.iterator_;
+      }
+
+      template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category,std::random_access_iterator_tag>,
+        std::enable_if_t<Cond, int> = 0>
+      bool operator<(const indirect_iterator& other) const
+      {
+        return iterator_ < other.iterator_;
+      }
+
+      template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category,std::random_access_iterator_tag>,
+        std::enable_if_t<Cond, int> = 0>
+      bool operator<=(const indirect_iterator& other) const
+      {
+        return iterator_ <= other.iterator_;
+      }
+
+      template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category,std::random_access_iterator_tag>,
+        std::enable_if_t<Cond, int> = 0>
+      bool operator>(const indirect_iterator& other) const
+      {
+        return iterator_ > other.iterator_;
+      }
+
+      template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category,std::random_access_iterator_tag>,
+        std::enable_if_t<Cond, int> = 0>
+      bool operator>=(const indirect_iterator& other) const
+      {
+        return iterator_ >= other.iterator_;
       }
 
     private:
@@ -91,6 +181,5 @@ namespace owl
       return iterator_range<indirect_iterator<decltype(std::begin(range))>>(std::begin(range), std::end(range));
     }
   }
-
 }
 
