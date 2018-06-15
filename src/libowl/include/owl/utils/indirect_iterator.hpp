@@ -109,9 +109,9 @@ namespace owl
 
       template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category,std::random_access_iterator_tag>,
         std::enable_if_t<Cond, int> = 0>
-      indirect_iterator& operator-=(difference_type n)
+      indirect_iterator& operator-=(indirect_iterator n)
       {
-        std::advance(iterator_, - n);
+        iterator_ -= n.iterator_;
         return *this;
       }
 
@@ -126,11 +126,9 @@ namespace owl
 
       template<bool Cond = std::is_base_of_v<indirect_iterator::iterator_category,std::random_access_iterator_tag>,
         std::enable_if_t<Cond, int> = 0>
-      indirect_iterator operator-(difference_type n) const
+      difference_type operator-(indirect_iterator n) const
       {
-        auto it = *this;
-        it -= n;
-        return it;
+        return iterator_ - n.iterator_;
       }
 
       bool operator==(const indirect_iterator& other) const

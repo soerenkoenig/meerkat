@@ -16,9 +16,12 @@ namespace test
 
     indirect_iterator<std::vector<int*>::iterator> first = numbers.begin();
     indirect_iterator<std::vector<int*>::iterator> last = numbers.end();
+    auto d = last - first;
+
+    auto dist = std::distance(first,last);
 
     auto range = make_indirect_range(numbers);
-    
+
 
 
   }
