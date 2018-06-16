@@ -86,5 +86,12 @@ namespace owl
     {
       return std::count_if(std::begin(rng), std::end(rng),std::forward<Pred>(cond));
     }
+
+    template<typename Range, typename T>
+    inline auto exists(Range&& rng, const T& value)
+    {
+      auto last = std::end(rng);
+      return std::find(std::begin(rng), last, value) != last;
+    }
   }
 }

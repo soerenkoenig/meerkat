@@ -177,7 +177,7 @@ namespace owl
        const step_iterator<Iterator, StepSize>& lhs,
        const step_iterator<Iterator, StepSize>& rhs)
     {
-      return std::distance(lhs.base(),rhs.base()) / lhs.stepsize();
+      return std::distance(lhs.base(),rhs.base()) / StepSize;
     }
   
     template<typename Iterator1, typename Iterator2, std::size_t StepSize>
