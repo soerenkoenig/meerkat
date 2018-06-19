@@ -31,7 +31,7 @@ namespace owl
         detail::compare_margin(lhs, rhs, epsilon * (scale + std::fabs(lhs)));
     }
   
-    template <typename Container, typename = std::enable_if_t<owl::utils::is_container<Container>::value> >
+    template <typename Container, typename = std::enable_if_t<owl::utils::is_range<Container>::value> >
     bool compare_equal(const Container& lhs, const Container& rhs, double margin, double epsilon, double scale)
     {
       return std::equal(lhs.begin(),lhs.end(),rhs.begin(),

@@ -112,7 +112,7 @@ namespace owl
 
         void invert_selection()
         {
-          if (is_selected())
+          if(is_selected())
             deselect();
           else
             select();
@@ -139,25 +139,25 @@ namespace owl
         using color_t = color::rgba8u;
 
         template<typename Range>
-        using is_vertex_handle_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, vertex_handle>;
+        using is_vertex_handle_range = utils::is_range_of_t<Range, vertex_handle>;
 
         template<typename Range>
-        using is_halfedge_handle_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, halfedge_handle>;
+        using is_halfedge_handle_range = utils::is_range_of_t<Range, halfedge_handle>;
 
         template<typename Range>
-        using is_edge_handle_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, edge_handle>;
+        using is_edge_handle_range = utils::is_range_of_t<Range, edge_handle>;
 
         template<typename Range>
-        using is_face_handle_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, face_handle>;
+        using is_face_handle_range = utils::is_range_of_t<Range, face_handle>;
 
         template<typename Range>
-        using is_point_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, point>;
+        using is_point_range = utils::is_range_of_t<Range, point>;
 
         template<typename Range>
-        using is_point2_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, point2>;
+        using is_point2_range = utils::is_range_of_t<Range, point2>;
 
         template<typename Range>
-        using is_vector_range = std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, vector>;
+        using is_vector_range = utils::is_range_of_t<Range, vector>;
 
         mesh()
         {
@@ -201,7 +201,7 @@ namespace owl
           };
 
           halfedge_handle he = inner(f);
-          while (target(he) != v_start)
+          while(target(he) != v_start)
             he = next(he);
 
           return make_handle_circulator_range(he, step, deref);
@@ -230,19 +230,19 @@ namespace owl
         auto incoming_halfedges(vertex_handle v) const
         {
           return make_handle_circulator_range(incoming(v),
-                                              [this](halfedge_handle he)
-                                              {
-                                                return next_incoming(he);
-                                              });
+            [this](halfedge_handle he)
+            {
+              return next_incoming(he);
+            });
         }
 
         auto outgoing_halfedges(vertex_handle v) const
         {
           return make_handle_circulator_range(outgoing(v),
-                                              [this](halfedge_handle he)
-                                              {
-                                                return next_outgoing(he);
-                                              });
+            [this](halfedge_handle he)
+            {
+              return next_outgoing(he);
+            });
         }
 
         auto edges(face_handle f) const
@@ -268,23 +268,23 @@ namespace owl
         auto inner_halfedges(face_handle f, halfedge_handle he_start) const
         {
           halfedge_handle he = inner(f);
-          while (he != he_start)
+          while(he != he_start)
             he = next(he);
 
           return make_handle_circulator_range(he,
-                                              [this](halfedge_handle he)
-                                              {
-                                                return next(he);
-                                              });
+            [this](halfedge_handle he)
+            {
+              return next(he);
+            });
         }
 
         auto halfedges(halfedge_handle he) const
         {
           return make_handle_circulator_range(he,
-                                              [this](halfedge_handle he)
-                                              {
-                                                return next(he);
-                                              });
+            [this](halfedge_handle he)
+            {
+              return next(he);
+            });
         }
 
         auto outer_halfedges(face_handle f) const
@@ -315,8 +315,8 @@ namespace owl
           };
 
           return utils::filter([](face_handle f)
-                               { return f.is_valid(); },
-                               make_handle_circulator_range(inner(f), step, deref));
+            { return f.is_valid(); },
+            make_handle_circulator_range(inner(f), step, deref));
         }
 
         const point &position(vertex_handle v) const
@@ -445,8 +445,8 @@ namespace owl
         auto positions(VertexRange &&vertices) const
         {
           return utils::map_range([this](vertex_handle v) -> const auto &
-                                  { return position(v); },
-                                  std::forward<VertexRange>(vertices));
+            { return position(v); },
+            std::forward<VertexRange>(vertices));
         }
 
         template<typename VertexRange, typename =
@@ -454,24 +454,24 @@ namespace owl
         auto positions(VertexRange &&vertices)
         {
           return utils::map_range([this](vertex_handle v) -> auto &
-                                  { return position(v); },
-                                  std::forward<VertexRange>(vertices));
+            { return position(v); },
+            std::forward<VertexRange>(vertices));
         }
 
         template<typename FaceHandleRange, typename = std::enable_if_t<is_face_handle_range<FaceHandleRange>::value>>
         auto normals(FaceHandleRange &&faces) const
         {
           return utils::map_range([this](face_handle f) -> const auto &
-                                  { return normal(f); },
-                                  std::forward<FaceHandleRange>(faces));
+            { return normal(f); },
+            std::forward<FaceHandleRange>(faces));
         }
 
         template<typename FaceHandleRange, typename = std::enable_if_t<is_face_handle_range<FaceHandleRange>::value>>
         auto normals(FaceHandleRange &&faces)
         {
           return utils::map_range([this](face_handle f) -> auto &
-                                  { return normal(f); },
-                                  std::forward<FaceHandleRange>(faces));
+            { return normal(f); },
+            std::forward<FaceHandleRange>(faces));
         }
 
         template<typename HalfEdgeHandleRange, typename = std::enable_if_t<is_halfedge_handle_range<HalfEdgeHandleRange>::value>,
@@ -479,8 +479,8 @@ namespace owl
         auto normals(HalfEdgeHandleRange &&halfedges) const
         {
           return utils::map_range([this](halfedge_handle he) -> const auto &
-                                  { return normal(he); },
-                                  std::forward<HalfEdgeHandleRange>(halfedges));
+            { return normal(he); },
+            std::forward<HalfEdgeHandleRange>(halfedges));
         }
 
         template<typename HalfEdgeHandleRange, typename = std::enable_if_t<is_halfedge_handle_range<HalfEdgeHandleRange>::value>,
@@ -488,16 +488,16 @@ namespace owl
         auto normals(HalfEdgeHandleRange &&halfedges)
         {
           return utils::map_range([this](halfedge_handle he) -> auto &
-                                  { return normal(he); },
-                                  std::forward<HalfEdgeHandleRange>(halfedges));
+            { return normal(he); },
+            std::forward<HalfEdgeHandleRange>(halfedges));
         }
 
         template<typename HalfEdgeHandleRange, typename = std::enable_if_t<is_halfedge_handle_range<HalfEdgeHandleRange>::value>>
         auto texcoords(HalfEdgeHandleRange &&halfedges) const
         {
           return utils::map_range([this](halfedge_handle he) -> const auto &
-                                  { return texcoord(he); },
-                                  std::forward<HalfEdgeHandleRange>(halfedges));
+            { return texcoord(he); },
+            std::forward<HalfEdgeHandleRange>(halfedges));
         }
 
         template<typename HalfEdgeHandleRange, typename = std::enable_if_t<is_halfedge_handle_range<HalfEdgeHandleRange>::value>,
@@ -505,8 +505,8 @@ namespace owl
         auto texcoords(HalfEdgeHandleRange &&halfedges)
         {
           return utils::map_range([this](halfedge_handle he) -> auto &
-                                  { return texcoord(he); },
-                                  std::forward<HalfEdgeHandleRange>(halfedges));
+            { return texcoord(he); },
+            std::forward<HalfEdgeHandleRange>(halfedges));
         }
 
         std::size_t num_vertices() const
@@ -532,10 +532,10 @@ namespace owl
         std::size_t num_n_gons(std::size_t n) const
         {
           return utils::count_if(faces(),
-                                 [this, n](face_handle f)
-                                 {
-                                   return is_n_gon(f, n);
-                                 });
+            [this, n](face_handle f)
+            {
+              return is_n_gon(f, n);
+            });
         }
 
         std::size_t num_triangles() const
@@ -551,10 +551,10 @@ namespace owl
         bool is_non_manifold(vertex_handle v) const
         {
           std::size_t n = 0;
-          for (auto he : incoming_halfedges(v))
-            if (is_boundary(he))
+          for(auto he : incoming_halfedges(v))
+            if(is_boundary(he))
             {
-              if (++n > 1)
+              if(++n > 1)
                 return true;
             }
           return false;
@@ -579,15 +579,15 @@ namespace owl
 
         bool is_boundary(face_handle f, bool check_vertices = false) const
         {
-          if (check_vertices)
+          if(check_vertices)
           {
-            for (auto v : vertices(f))
-              if (is_boundary(v))
+            for(auto v : vertices(f))
+              if(is_boundary(v))
                 return true;
             return false;
           }
-          for (auto he : outer_halfedges(f))
-            if (is_boundary(he))
+          for(auto he : outer_halfedges(f))
+            if(is_boundary(he))
               return true;
           return false;
         }
@@ -680,7 +680,7 @@ namespace owl
           auto he_new = halfedge(e);
           auto he_new_opp = opposite(he_new);
 
-          if (incoming(vold) == he)
+          if(incoming(vold) == he)
             incoming(vold) = he_new_opp;
 
           next(he_opp_prev) = he_new;
@@ -691,7 +691,7 @@ namespace owl
           target(he) = v;
           face(he_new) = face(he_opp);
           face(he_new_opp) = face(he);
-          if (!face(he_new).is_valid())
+          if(!face(he_new).is_valid())
             incoming(v) = he_new;
           else
             incoming(v) = he;
@@ -702,7 +702,7 @@ namespace owl
         auto split_edges()
         {
           auto first = edge_handle{num_edges()};
-          for (auto e : edges())
+          for(auto e : edges())
           {
             auto pos = centroid(e);
             split(e, pos);
@@ -744,10 +744,10 @@ namespace owl
             return v.index() < num_vertices_old;
           };
 
-          for (auto f : faces())
+          for(auto f : faces())
           {
             auto he_prev = inner(f);
-            if (is_old_vertex(target(he_prev)))
+            if(is_old_vertex(target(he_prev)))
               he_prev = next(he_prev);
 
             auto he_next = next(next(next(he_prev)));
@@ -755,7 +755,7 @@ namespace owl
             auto v = target(split_edge(e, centroid(f)));
             he_prev = next(he_prev);
             he_next = next(next(he_next));
-            while (he_next != he_prev)
+            while(he_next != he_prev)
             {
               insert(edge(he_prev, he_next));
               he_next = next(next(he_next));
@@ -780,10 +780,10 @@ namespace owl
             return v.index() < num_vertices_old;
           };
 
-          for (auto f : faces())
+          for(auto f : faces())
           {
             auto he_prev = inner(f);
-            if (is_old_vertex(target(he_prev)))
+            if(is_old_vertex(target(he_prev)))
               he_prev = next(he_prev);
 
             auto he_next = next(next(next(he_prev)));
@@ -824,7 +824,7 @@ namespace owl
           auto f_new = create_face(he);
           face(he) = f_new;
           auto he2 = next(he);
-          while (he2 != he)
+          while(he2 != he)
           {
             face(he2) = f_new;
             he2 = next(he2);
@@ -853,7 +853,7 @@ namespace owl
           auto points = positions(vertices(f));
           point mp = point::origin();
           std::size_t n = 0;
-          for (auto p : points)
+          for(auto p : points)
           {
             mp += p;
             ++n;
@@ -866,7 +866,7 @@ namespace owl
           auto hes = halfedges(f);
           std::vector<halfedge_handle> hes_old(hes.begin(), hes.end());
           std::vector<edge_handle> edges_new;
-          for (auto he : hes_old)
+          for(auto he : hes_old)
           {
             split(he, centroid(he));
             auto e = add_edge(target(he), v);
@@ -875,10 +875,10 @@ namespace owl
             next(he) = halfedge(e);
           }
 
-          for (auto e : utils::make_adjacent_range(edges_new))
+          for(auto e : utils::make_adjacent_range(edges_new))
           {
             auto he2 = halfedge(e.current);
-            if (f == faces_.size())
+            if(f == faces_.size())
               create_face(he2);
             else
               inner(f) = he2;
@@ -888,7 +888,7 @@ namespace owl
             {
               face(he2) = f;
               he2 = next(he2);
-            } while (he2 != he_start);
+            } while(he2 != he_start);
 
             f = faces_.size();
 
@@ -902,12 +902,12 @@ namespace owl
           auto v1 = direction(opposite(he));
           auto denom = v0.length() * v1.length();
 
-          if (denom == scalar(0))
+          if(denom == scalar(0))
             return 0;
 
           scalar cos_a = dot(v0, v1) / denom;
           cos_a = std::clamp(cos_a, -1, 1);
-          if (is_boundary(he))
+          if(is_boundary(he))
           {
             vector f_n(compute_loop_normal(opposite(he)));
             scalar sign_a = dot(cross(v0, v1), f_n);
@@ -923,7 +923,7 @@ namespace owl
 
         angle dihedral_angle(edge_handle e) const
         {
-          if (is_boundary(e))
+          if(is_boundary(e))
             return radians<scalar>(0);
 
           vector n0, n1;
@@ -932,7 +932,7 @@ namespace owl
           n1 = compute_sector_normal(opposite(he));
           auto he_dir = direction(he);
           scalar denom = n0.length() * n1.length();
-          if (denom == 0)
+          if(denom == 0)
             return radians<scalar>(0);
           scalar da_cos = dot(n0, n1) / denom;
           da_cos = std::clamp(da_cos, scalar{-1}, scalar{1});
@@ -943,7 +943,7 @@ namespace owl
         vector compute_sector_normal(halfedge_handle he, bool normalize = true) const
         {
           auto nml = cross(direction(next(he)), direction(opposite(he)));
-          if (normalize)
+          if(normalize)
             nml.normalize();
           return nml;
         }
@@ -952,10 +952,10 @@ namespace owl
         {
           auto nml = vector::zero();
 
-          for (auto he : halfedges(he))
+          for(auto he : halfedges(he))
             nml += compute_sector_normal(he, false);
 
-          if (normalize)
+          if(normalize)
             nml.normalize();
 
           return nml;
@@ -969,9 +969,9 @@ namespace owl
         vector compute_vertex_normal(vertex_handle v) const
         {
           auto nml = vector::zero();
-          if (v.index() == 217)
+          if(v.index() == 217)
             return nml;
-          for (auto he : incoming_halfedges(v))
+          for(auto he : incoming_halfedges(v))
             nml += compute_sector_normal(he, false);
 
           nml.normalize();
@@ -981,7 +981,7 @@ namespace owl
         void update_face_normals()
         {
 //        utils::progress progress(num_faces());
-          for (auto f : faces())
+          for(auto f : faces())
           {
             normal(f) = compute_face_normal(f);
             //   progress.step();
@@ -991,7 +991,7 @@ namespace owl
         void update_halfedge_normals(const angle &max_angle = degrees<scalar>(44))
         {
           //  utils::progress progress(num_halfedges());
-          for (auto he : halfedges())
+          for(auto he : halfedges())
           {
             normal(he) = is_sharp(he, max_angle) ? compute_loop_normal(he) : compute_vertex_normal(target(he));
             //   progress.step();
@@ -1125,15 +1125,15 @@ namespace owl
         template<typename VertexHandleRange, typename = std::enable_if_t<is_vertex_handle_range<VertexHandleRange>::value>>
         face_handle add_face(VertexHandleRange &&vertices)
         {
-          if (std::size(vertices) < 3)
+          if(std::size(vertices) < 3)
           {
             std::cout << "not enough vertices" << std::endl;
             return face_handle::invalid();
           }
-          if (utils::any_of(vertices, [this](const vertex_handle &v)
+          if(utils::any_of(vertices, [this](const vertex_handle &v)
           { return !is_boundary(v); }))
           {
-            for (auto v: vertices)
+            for(auto v: vertices)
               std::cout << v << " " << std::boolalpha << is_boundary(v) << std::endl;
             std::cout << "new face will produce a complex vertex" << std::endl;
             return face_handle::invalid();
@@ -1145,14 +1145,14 @@ namespace owl
           std::vector<halfedge_handle> hes;
           hes.reserve(std::size(vertices));
           std::size_t num_edges_old = num_edges();
-          for (auto v : owl::utils::make_adjacent_range(vertices))
+          for(auto v : owl::utils::make_adjacent_range(vertices))
           {
             auto he = find_halfedge(v.prev, v.current);
-            if (!he.is_valid())
+            if(!he.is_valid())
               he = halfedge(add_edge(v.prev, v.current));
             else
             {
-              if (!is_boundary(he))
+              if(!is_boundary(he))
               {
                 edges_.resize(num_edges_old);
                 edge_properties_.resize(num_edges_old);
@@ -1166,11 +1166,11 @@ namespace owl
 
           create_face(hes.back());
 
-          for (auto he : owl::utils::make_adjacent_range(hes))
+          for(auto he : owl::utils::make_adjacent_range(hes))
           {
             auto v = target(he.current);
 
-            if (is_isolated(v))
+            if(is_isolated(v))
             {
               next(he.current) = he.next;
               auto temp = opposite(he.next);
@@ -1179,22 +1179,22 @@ namespace owl
               continue;
             }
 
-            if (next(he.current) == he.next)
+            if(next(he.current) == he.next)
             {
-              if (incoming(v) == he.current)
+              if(incoming(v) == he.current)
                 adjust_incoming(v);
               continue;
             }
 
-            if (next(he.current).is_valid())
+            if(next(he.current).is_valid())
             {
-              if (next(opposite(he.next)).is_valid())
+              if(next(opposite(he.next)).is_valid())
               {
                 assert(next(he.current) != he.next);
                 auto a = next(he.current);
                 auto b = prev_circ(he.next);
                 auto he_gap = opposite(he.next);
-                while (!is_boundary(he_gap))
+                while(!is_boundary(he_gap))
                   he_gap = next_incoming(he_gap);
                 next(b) = next(he_gap);
                 next(he_gap) = a;
@@ -1209,7 +1209,7 @@ namespace owl
               }
             } else //next(he.current) invalid
             {
-              if (next(opposite(he.next)).is_valid())
+              if(next(opposite(he.next)).is_valid())
               {
                 auto b = prev_circ(he.next);
                 next(b) = opposite(he.current);
@@ -1232,11 +1232,11 @@ namespace owl
 
         bool is_flipable(edge_handle e) const
         {
-          if (is_boundary(e))
+          if(is_boundary(e))
             return false;
 
           auto[he1, he2] = halfedges(e);
-          if (!is_triangle(face(he1)) || !is_triangle(face(he2)))
+          if(!is_triangle(face(he1)) || !is_triangle(face(he2)))
             return false;
 
           auto v1 = target(next(he1));
@@ -1271,15 +1271,15 @@ namespace owl
 
           face(p2) = f1;
           face(p1) = f2;
-          if (inner(f1) == p1)
+          if(inner(f1) == p1)
             inner(f1) = he1;
-          if (inner(f2) == p2)
+          if(inner(f2) == p2)
             inner(f2) = he2;
           target(he1) = v1;
           target(he2) = v2;
-          if (incoming(v3) == he1)
+          if(incoming(v3) == he1)
             incoming(v3) = p2;
-          if (incoming(v4) == he2)
+          if(incoming(v4) == he2)
             incoming(v4) = p1;
         }
 
@@ -1316,8 +1316,8 @@ namespace owl
 
         void remove_isolated_vertices()
         {
-          for (auto v: vertices())
-            if (is_isolated(v) && !is_removed(v))
+          for(auto v: vertices())
+            if(is_isolated(v) && !is_removed(v))
               remove(v);
         }
 
@@ -1327,9 +1327,9 @@ namespace owl
           auto last = verts.end();
           auto first = utils::find_if(verts, [this](vertex_handle v)
           { return status(v).removed(); });
-          if (first != last)
-            for (auto i = first; ++i != last;)
-              if (!status(*i).removed())
+          if(first != last)
+            for(auto i = first; ++i != last;)
+              if(!status(*i).removed())
                 move(*i, *first++);
         }
 
@@ -1348,11 +1348,11 @@ namespace owl
         //ensure halfedge of v is a boundary halfedge if v is on boundary
         void adjust_incoming(vertex_handle v)
         {
-          if (is_boundary(incoming(v)))
+          if(is_boundary(incoming(v)))
             return;
-          for (auto he : incoming_halfedges(v))
+          for(auto he : incoming_halfedges(v))
           {
-            if (is_boundary(he))
+            if(is_boundary(he))
             {
               incoming(v) = he;
               break;
@@ -1522,7 +1522,7 @@ namespace owl
 
         halfedge_handle outgoing(vertex_handle v) const
         {
-          if (is_isolated(v))
+          if(is_isolated(v))
             return halfedge_handle::invalid();
           return opposite(incoming(v));
         }
@@ -1532,7 +1532,7 @@ namespace owl
           auto prev_he = next(he);
           auto next_prev_he = next(prev_he);
 
-          while (next_prev_he != he)
+          while(next_prev_he != he)
           {
             prev_he = next_prev_he;
             next_prev_he = next(next_prev_he);
@@ -1545,7 +1545,7 @@ namespace owl
           auto prev_he = opposite(next(opposite(he)));
           auto next_prev_he = next(prev_he);
 
-          while (next_prev_he != he)
+          while(next_prev_he != he)
           {
             prev_he = opposite(next_prev_he);
             next_prev_he = next(prev_he);
@@ -1572,8 +1572,8 @@ namespace owl
 
         halfedge_handle find_halfedge(vertex_handle from, vertex_handle to) const
         {
-          for (auto he : outgoing_halfedges(from))
-            if (target(he) == to)
+          for(auto he : outgoing_halfedges(from))
+            if(target(he) == to)
               return he;
           return halfedge_handle::invalid();
         }
@@ -1581,7 +1581,7 @@ namespace owl
         edge_handle find_edge(vertex_handle from, vertex_handle to) const
         {
           halfedge_handle he = find_halfedge(from, to);
-          if (he.is_valid())
+          if(he.is_valid())
             return edge(he);
 
           return edge_handle::invalid();
@@ -1591,18 +1591,18 @@ namespace owl
         {
           std::size_t count_error = 0;
           std::size_t count_warning = 0;
-          for (auto he: halfedges())
+          for(auto he: halfedges())
           {
-            if (!target(he).is_valid())
+            if(!target(he).is_valid())
             {
               std::cout << "target(" << he << ") is invalid " << he << std::endl;
               ++count_error;
             }
-            if (!next(he).is_valid())
+            if(!next(he).is_valid())
             {
               std::cout << "next(" << he << ") is invalid " << he << std::endl;
               ++count_error;
-            } else if (face(he) != face(next(he)))
+            } else if(face(he) != face(next(he)))
             {
               std::cout << "face(" << he << ") = " << face(he) << std::endl;
               std::cout << "next(" << he << ") = " << next(he) << std::endl;
@@ -1610,34 +1610,34 @@ namespace owl
               ++count_error;
             }
           }
-          for (auto v: vertices())
+          for(auto v: vertices())
           {
-            if (is_isolated(v))
+            if(is_isolated(v))
             {
-              if (!supress_warnings)
+              if(!supress_warnings)
               {
                 std::cout << "mesh contains isolated vertex " << v << " at " << position(v) << std::endl;
                 ++count_warning;
               }
             } else
             {
-              if (status(edge(incoming(v))).is_removed())
+              if(status(edge(incoming(v))).is_removed())
               {
                 std::cout << "mesh contains removed incoming halfedge at vertex " << v << std::endl;
                 ++count_error;
               }
-              if (target(incoming(v)) != v)
+              if(target(incoming(v)) != v)
               {
                 std::cout << "mesh contains inconsistent vertex <-> halfedge linkage" << std::endl;
                 std::cout << "incoming(" << v << ") = " << incoming(v) << std::endl;
                 std::cout << "target(" << incoming(v) << ") =  " << target(incoming(v)) << std::endl;
                 ++count_error;
               }
-              if (!is_boundary(v))
+              if(!is_boundary(v))
               {
-                for (auto he: incoming_halfedges(v))
+                for(auto he: incoming_halfedges(v))
                 {
-                  if (is_boundary(he))
+                  if(is_boundary(he))
                   {
                     std::cout << "vertex " << v << " is not adjusted to boundary vertex" << he << std::endl;
                     ++count_error;
@@ -1647,11 +1647,11 @@ namespace owl
             }
           }
 
-          for (auto f: faces())
+          for(auto f: faces())
           {
-            if (status(f).is_removed())
+            if(status(f).is_removed())
             {
-              if (inner(f).is_valid())
+              if(inner(f).is_valid())
               {
                 std::cout << "removed face " << f << "is referencing an halfedge " << std::endl;
                 ++count_error;
@@ -1659,20 +1659,20 @@ namespace owl
               continue;
             }
 
-            if (!inner(f).is_valid())
+            if(!inner(f).is_valid())
             {
               std::cout << "halfedge of face " << f << "is invalid " << std::endl;
               ++count_error;
             } else
             {
-              if (status(edge(inner(f))).is_removed())
+              if(status(edge(inner(f))).is_removed())
               {
                 std::cout << "halfedge of face " << f << "is removed" << std::endl;
                 ++count_error;
               }
-              for (auto he : inner_halfedges(f))
+              for(auto he : inner_halfedges(f))
               {
-                if (face(he) != f)
+                if(face(he) != f)
                 {
                   std::cout << "face " << f << "contains inconsistent halfedge " << he << std::endl;
                   ++count_error;
@@ -1790,7 +1790,7 @@ namespace owl
         //data stored under to is replaced by from
         void move(vertex_handle to, vertex_handle from)
         {
-          for (auto he : incoming_halfedges(from))
+          for(auto he : incoming_halfedges(from))
             target(he) = to;
           incoming(to) = std::move(incoming(from));
           vertices_[to.index()] = std::move(vertices_[from.index()]);
@@ -1802,7 +1802,7 @@ namespace owl
         //data stored under to is replaced by from
         void move(face_handle to, face_handle from)
         {
-          for (auto he : inner_halfedges(from))
+          for(auto he : inner_halfedges(from))
             face(he) = to;
 
           halfedge(from) = halfedge(to);
@@ -1885,7 +1885,7 @@ namespace owl
       template<typename Scalar>
       void colorize_faces(mesh<Scalar> &m, const typename mesh<Scalar>::color_t &col)
       {
-        for (auto f: m.faces())
+        for(auto f: m.faces())
           m.color(f) = col;
 
       }
@@ -1895,23 +1895,23 @@ namespace owl
       {
         std::size_t count = 0;
         std::vector<bool> visited(mesh.num_faces(), false);
-        for (auto f : mesh.faces())
+        for(auto f : mesh.faces())
         {
-          if (visited[f.index()])
+          if(visited[f.index()])
             continue;
           ++count;
 
           std::stack<face_handle> stack;
           stack.push(f);
-          while (!stack.empty())
+          while(!stack.empty())
           {
             auto fc = stack.top();
             visited[fc.index()] = true;
             stack.pop();
 
-            for (auto adj_face : mesh.faces(fc))
+            for(auto adj_face : mesh.faces(fc))
             {
-              if (!visited[adj_face.index()])
+              if(!visited[adj_face.index()])
                 stack.push(adj_face);
             }
           }
@@ -1923,8 +1923,8 @@ namespace owl
       bool is_closed(mesh<Scalar> &mesh)
       {
         return owl::utils::none_of(mesh.halfedges(),
-                                   [&mesh](auto he)
-                                   { return mesh.is_boundary(he); });
+          [&mesh](auto he)
+          { return mesh.is_boundary(he); });
       }
 
       template<typename Scalar>
@@ -1937,21 +1937,21 @@ namespace owl
       void transform(mesh<Scalar> &mesh, const matrix<Scalar, 4, 4> &point_trafo,
         const matrix<Scalar, 4, 4> &normal_trafo, bool auto_normalize = true)
       {
-        for (auto &pos : mesh.positions(mesh.vertices()))
+        for(auto &pos : mesh.positions(mesh.vertices()))
           pos = unhomog_point(point_trafo * homog_point(pos));
 
-        for (auto &nml : mesh.normals(mesh.halfedges()))
+        for(auto &nml : mesh.normals(mesh.halfedges()))
           nml = unhomog_normal(normal_trafo * homog_normal(nml));
 
-        for (auto &nml : mesh.normals(mesh.faces()))
+        for(auto &nml : mesh.normals(mesh.faces()))
           nml = unhomog_normal(normal_trafo * homog_normal(nml));
 
-        if (auto_normalize)
+        if(auto_normalize)
         {
-          for (auto &nml : mesh.normals(mesh.halfedges()))
+          for(auto &nml : mesh.normals(mesh.halfedges()))
             nml.normalize();
 
-          for (auto &nml : mesh.normals(mesh.faces()))
+          for(auto &nml : mesh.normals(mesh.faces()))
             nml.normalize();
         }
       }
@@ -1979,7 +1979,7 @@ namespace owl
       template<typename Scalar>
       void print_vertex_positions(const mesh<Scalar> &m)
       {
-        for (auto pos: m.positions(m.vertices()))
+        for(auto pos: m.positions(m.vertices()))
           std::cout << pos << std::endl;
       }
 
@@ -1990,7 +1990,7 @@ namespace owl
         std::vector<line_segment<Scalar, 3>> normal_line_segments;
         normal_line_segments.reserve(m.num_faces());
 
-        for (auto f: m.faces())
+        for(auto f: m.faces())
         {
           auto centroid = m.centroid(f);
           normal_line_segments.emplace_back(centroid, centroid + length * m.normal(f));

@@ -778,7 +778,7 @@ namespace owl
           assert(row_ + 1  == mat_.nrows() && col_  == mat_.ncols());
         }
         
-        template <typename Container, typename = std::enable_if_t<utils::is_container<std::decay_t<Container>>::value> >
+        template <typename Container, typename = std::enable_if_t<utils::is_range<std::decay_t<Container>>::value> >
         comma_initializer& operator,(Container&& c)
         {
           for(auto&& elem : c)

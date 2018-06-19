@@ -141,19 +141,19 @@ namespace owl
 
 
     /*template <typename T>
-    struct is_container : std::integral_constant<bool, has_begin<T>::value && has_end<T>::value> {};*/
+    struct is_range : std::integral_constant<bool, has_begin<T>::value && has_end<T>::value> {};*/
   
     template <typename T>
-    struct is_container : is_iterable<T>{};
+    struct is_range : is_iterable<T>{};
   
     template <typename T, std::size_t N>
-    struct is_container<T[N]> : std::true_type {};
+    struct is_range<T[N]> : std::true_type {};
 
     template <typename T>
-    struct is_container<std::valarray<T>> : std::true_type {};
+    struct is_range<std::valarray<T>> : std::true_type {};
   
-    template <typename Container, typename = std::enable_if_t<is_container<Container>::value> >
-    struct container_traits
+    template <typename Container, typename = std::enable_if_t<is_range<Container>::value> >
+    struct range_traits
     {
       typedef decltype(std::begin(std::declval<Container>())) iterator;
       typedef decltype(std::begin(std::declval<const Container>())) const_iterator;
@@ -163,7 +163,7 @@ namespace owl
     };
   
     template <typename T, std::size_t N >
-    struct container_traits<T[N], void>
+    struct range_traits<T[N], void>
     {
       typedef T* iterator;
       typedef const T* const_iterator;
@@ -171,11 +171,17 @@ namespace owl
       typedef std::ptrdiff_t difference_type;
       typedef T value_type;
     };
-    
+
+    template<typename Range, typename Value>
+    using is_range_of = std::is_same<typename owl::utils::range_traits<std::decay_t<Range>>::value_type, Value>;
+
+    template<typename Range, typename Value>
+    using is_range_of_t = typename is_range_of<Range,Value>::type;
+
     namespace detail
     {
       template<class Function, std::size_t... Indices>
-      constexpr std::array<typename std::result_of<Function(std::size_t)>::type, sizeof...(Indices)>
+      constexpr std::array<typename std::result_of_t<Function(std::size_t)>, sizeof...(Indices)>
       make_array_helper(Function f, std::index_sequence<Indices...>)
       {
         return {{f(Indices)...}};
@@ -183,7 +189,7 @@ namespace owl
     }
       
     template <std::size_t N, class Function>
-    constexpr std::array<typename std::result_of<Function(std::size_t)>::type, N>
+    constexpr std::array<typename std::result_of_t<Function(std::size_t)>, N>
     make_array(Function f)
     {
       return detail::make_array_helper(f, std::make_index_sequence<N>{});

@@ -46,13 +46,13 @@ namespace owl
       using reference = Color&;
 
       template <typename Range>
-      using is_pixel_handle_range =  std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, pixel_handle>;
+      using is_pixel_handle_range =  std::is_same<typename utils::range_traits<std::decay_t<Range>>::value_type, pixel_handle>;
 
       template <typename Range>
-      using is_row_handle_range =  std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, row_handle>;
+      using is_row_handle_range =  std::is_same<typename utils::range_traits<std::decay_t<Range>>::value_type, row_handle>;
 
       template <typename Range>
-      using is_column_handle_range =  std::is_same<typename utils::container_traits<std::decay_t<Range>>::value_type, column_handle>;
+      using is_column_handle_range =  std::is_same<typename utils::range_traits<std::decay_t<Range>>::value_type, column_handle>;
 
 
       image() = default;

@@ -188,14 +188,14 @@ namespace owl
           make_map_iterator(std::forward<Predicate>(pred), std::forward<Iterator>(one_past_last)));
     }
   
-    template<typename Predicate, typename Range, typename = std::enable_if_t<is_container<std::decay_t<Range>>::value>>
+    template<typename Predicate, typename Range, typename = std::enable_if_t<is_range<std::decay_t<Range>>::value>>
     auto map_range(Range&& range)
     {
       return map_range<Predicate>(std::begin(std::forward<Range>(range)),
        std::end(std::forward<Range>(range)));
     }
 
-    template<typename Predicate, typename Range, typename = std::enable_if_t< is_container<std::decay_t<Range>>::value>>
+    template<typename Predicate, typename Range, typename = std::enable_if_t< is_range<std::decay_t<Range>>::value>>
     auto map_range(Predicate &&pred, Range&& range)
     {
       return map_range(std::forward<Predicate>(pred),

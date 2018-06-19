@@ -161,14 +161,14 @@ namespace owl
       return make_iterator_range(f, f.end());
     }
   
-    template<typename Predicate, typename Range, typename = std::enable_if_t<is_container<std::decay_t<Range>>::value>>
+    template<typename Predicate, typename Range, typename = std::enable_if_t<is_range<std::decay_t<Range>>::value>>
     auto filter(Range&& range)
     {
       auto f = make_filter_iterator<Predicate>(std::begin(range), std::end(range));
       return make_iterator_range(f, f.end());
     }
 
-    template<typename Predicate, typename Range, typename = std::enable_if_t< is_container<std::decay_t<Range>>::value>>
+    template<typename Predicate, typename Range, typename = std::enable_if_t< is_range<std::decay_t<Range>>::value>>
     auto filter(Predicate &&pred, Range&& range)
     {
       auto f = make_filter_iterator(std::forward<Predicate>(pred),

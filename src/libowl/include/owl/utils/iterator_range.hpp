@@ -239,34 +239,34 @@ namespace owl
     }
   
     template<typename Range>
-    iterator_range<typename container_traits<Range>::iterator> make_iterator_range(Range& r)
+    iterator_range<typename range_traits<Range>::iterator> make_iterator_range(Range& r)
     {
-      return iterator_range<typename container_traits<Range>::iterator>(std::begin(r), std::end(r));
+      return iterator_range<typename range_traits<Range>::iterator>(std::begin(r), std::end(r));
     }
   
     template<typename Range>
-    iterator_range<typename container_traits<Range>::const_iterator> make_iterator_range(const Range& r)
+    iterator_range<typename range_traits<Range>::const_iterator> make_iterator_range(const Range& r)
     {
-      return iterator_range<typename container_traits<Range>::const_iterator>(r);
+      return iterator_range<typename range_traits<Range>::const_iterator>(r);
     }
   
     template<typename Range>
-    iterator_range<typename container_traits<Range>::iterator> make_iterator_range(Range& r,
-      typename container_traits<Range>::difference_type advance_begin,
-      typename container_traits<Range>::difference_type advance_end)
+    iterator_range<typename range_traits<Range>::iterator> make_iterator_range(Range& r,
+      typename range_traits<Range>::difference_type advance_begin,
+      typename range_traits<Range>::difference_type advance_end)
     {
-      auto res = iterator_range<typename container_traits<Range>::iterator>(r);
+      auto res = iterator_range<typename range_traits<Range>::iterator>(r);
       res.advance_begin(advance_begin);
       res.advance_end(advance_end);
       return res;
     }
   
     template<typename Range>
-    iterator_range<typename container_traits<const Range>::const_iterator > make_iterator_range(const Range& r,
-      typename container_traits<const Range>::difference_type advance_begin,
-      typename container_traits<const Range>::difference_type advance_end)
+    iterator_range<typename range_traits<const Range>::const_iterator > make_iterator_range(const Range& r,
+      typename range_traits<const Range>::difference_type advance_begin,
+      typename range_traits<const Range>::difference_type advance_end)
     {
-      auto res = iterator_range<typename container_traits< Range>::const_iterator>(r);
+      auto res = iterator_range<typename range_traits< Range>::const_iterator>(r);
       res.advance_begin(advance_begin);
       res.advance_end(advance_end);
       return res;
