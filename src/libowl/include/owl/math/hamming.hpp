@@ -31,9 +31,9 @@ namespace owl
     template <typename Scalar, typename OutIter>
     void hamming(OutIter begin, OutIter end)
     {
-      auto n = std::distance(begin, end);
+      auto n = static_cast<std::size_t>(std::distance(begin, end));
       for(std::size_t i = 0; i < n; ++i)
-        *begin++ = 0.54 - 0.46 * std::cos(2 * constants::two_pi<Scalar> * i / (n-1) );
+        *begin++ = Scalar(0.54) - Scalar(0.46) * std::cos(2 * constants::two_pi<Scalar> * i / (n-1) );
     }
   }
 }
